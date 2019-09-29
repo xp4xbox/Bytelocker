@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ransomeware.Persistence
+namespace Bytelocker.Persistence
 {
-    class Melt
+    class Uninstall
     {
     }
 }

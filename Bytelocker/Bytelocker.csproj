@@ -67,18 +67,18 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CryptoManager\Aes.cs" />
-    <Compile Include="CryptoManager\CryptoManagerMainHandler.cs" />
-    <Compile Include="CryptoManager\DirManager.cs" />
-    <Compile Include="CryptoManager\FileEncrypter.cs" />
-    <Compile Include="Bytelocker.cs" />
+    <Compile Include="src\CryptoManager\Aes.cs" />
+    <Compile Include="src\CryptoManager\CryptoManagerMainHandler.cs" />
+    <Compile Include="src\CryptoManager\DirManager.cs" />
+    <Compile Include="src\CryptoManager\FileEncrypter.cs" />
+    <Compile Include="src\Bytelocker.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CryptoManager\PasswordManager.cs" />
-    <Compile Include="CryptoManager\FileManager.cs" />
-    <Compile Include="Persistence\Melt.cs" />
-    <Compile Include="Persistence\Uninstall.cs" />
-    <Compile Include="Settings\RegistryManager.cs" />
+    <Compile Include="src\CryptoManager\PasswordManager.cs" />
+    <Compile Include="src\CryptoManager\FileManager.cs" />
+    <Compile Include="src\Persistence\Melt.cs" />
+    <Compile Include="src\Persistence\Uninstall.cs" />
+    <Compile Include="src\Settings\RegistryManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -103,7 +103,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="UI\" />
+    <Folder Include="src\UI\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

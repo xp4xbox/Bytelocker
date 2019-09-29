@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace ransomeware.CryptoManager
+namespace Bytelocker.CryptoManager
 {
     class Aes
     {

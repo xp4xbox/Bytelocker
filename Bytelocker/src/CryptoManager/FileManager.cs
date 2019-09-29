@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace ransomeware.CryptoManager
+namespace Bytelocker.CryptoManager
 {
     class FileManager
     {

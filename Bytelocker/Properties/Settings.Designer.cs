@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ransomeware.Properties
+namespace Bytelocker.Properties
 {
 
 

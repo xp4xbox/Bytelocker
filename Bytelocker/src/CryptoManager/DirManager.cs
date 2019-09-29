@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace ransomeware.CryptoManager
+namespace Bytelocker.CryptoManager
 {
     class DirManager
     {

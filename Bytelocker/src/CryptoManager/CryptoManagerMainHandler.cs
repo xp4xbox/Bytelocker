@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ransomeware.CryptoManager
+namespace Bytelocker.CryptoManager
 {
     class CryptoManagerMainHandler
     {

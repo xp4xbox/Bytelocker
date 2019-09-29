@@ -1,4 +1,4 @@
-﻿using ransomeware.CryptoManager;
+﻿using Bytelocker.CryptoManager;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
  * Created for educational purposes ONLY
  * 
  */
-namespace ransomeware
+namespace Bytelocker
 {
     class Bytelocker
     {

