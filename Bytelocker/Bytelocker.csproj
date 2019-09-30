@@ -53,6 +53,7 @@
     </Reference>
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -72,12 +73,16 @@
     <Compile Include="src\CryptoManager\DirManager.cs" />
     <Compile Include="src\CryptoManager\FileEncrypter.cs" />
     <Compile Include="src\Bytelocker.cs" />
+    <Compile Include="src\UI\MainForm.cs" />
+    <Compile Include="src\UI\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\CryptoManager\PasswordManager.cs" />
     <Compile Include="src\CryptoManager\FileManager.cs" />
-    <Compile Include="src\Persistence\Melt.cs" />
-    <Compile Include="src\Persistence\Uninstall.cs" />
+    <Compile Include="src\Installer\Melt.cs" />
+    <Compile Include="src\Installer\Uninstall.cs" />
     <Compile Include="src\Settings\RegistryManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -96,14 +101,14 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="src\UI\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="src\packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="src\UI\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

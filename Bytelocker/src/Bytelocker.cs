@@ -1,4 +1,5 @@
 ﻿using Bytelocker.CryptoManager;
+using Bytelocker.src.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,10 +26,8 @@ namespace Bytelocker
             } decrypt one file for free
             */
 
-            CryptoManagerMainHandler cm = new CryptoManagerMainHandler();
-            cm.EncryptAll(PATH_TO_ENCRYPT);
-
-
-        } 
+            MainForm a = new MainForm();
+            a.ShowDialog();
+        }
     }
 }
