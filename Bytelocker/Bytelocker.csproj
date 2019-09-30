@@ -72,6 +72,9 @@
     <Compile Include="src\CryptoManager\DirManager.cs" />
     <Compile Include="src\CryptoManager\FileEncrypter.cs" />
     <Compile Include="src\Bytelocker.cs" />
+    <Compile Include="src\UI\Window1.xaml.cs">
+      <DependentUpon>Window1.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\CryptoManager\PasswordManager.cs" />
@@ -101,6 +104,13 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Page Include="src\UI\Window1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

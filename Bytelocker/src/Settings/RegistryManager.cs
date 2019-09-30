@@ -9,6 +9,7 @@ namespace Bytelocker.CryptoManager
 
         private String SOFTWARE_NAME = @"Software\ByteLocker";
         public static String FOLDER_KEY_NAME = "Folders";
+        public static String FILES_KEY_NAME = "Files";
 
         public List<String> ReadAllValues(String subKey)
         {
@@ -18,12 +19,17 @@ namespace Bytelocker.CryptoManager
 
         public void CreateMainKey()
         {
-            RegistryKey regKey = Registry.CurrentUser.CreateSubKey(SOFTWARE_NAME);
+            Registry.CurrentUser.CreateSubKey(SOFTWARE_NAME);
         }
 
         public void CreateSubKey(String name)
         {
-            RegistryKey regKey = Registry.CurrentUser.CreateSubKey(SOFTWARE_NAME + @"\" + name);
+            Registry.CurrentUser.CreateSubKey(SOFTWARE_NAME + @"\" + name);
+        }
+
+        public void DeleteSubKey(string name)
+        {
+            Registry.CurrentUser.DeleteSubKey(SOFTWARE_NAME + @"\" + name);
         }
 
         public void CreateBoolValue(String subKey, String valueName, bool value)
@@ -36,6 +42,12 @@ namespace Bytelocker.CryptoManager
         {
             RegistryKey regKey = Registry.CurrentUser.CreateSubKey(SOFTWARE_NAME + @"\" + subKey);
             regKey.DeleteValue(valueName);
+        }
+
+        public void CreateStringValue(String subKey, String valueName, String value)
+        {
+            RegistryKey regKey = Registry.CurrentUser.CreateSubKey(SOFTWARE_NAME + @"\" + subKey);
+            regKey.SetValue(valueName, value);
         }
 
         public void AddItemToStartup(String valuename, String filepath)

