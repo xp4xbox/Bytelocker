@@ -34,7 +34,7 @@ namespace Bytelocker.CryptoManager
                         }
                     }
 
-                    rm.DeleteBoolValue(RegistryManager.FOLDER_KEY_NAME, this.dir_path);
+                    rm.DeleteValue(RegistryManager.FOLDER_KEY_NAME, this.dir_path);
                 }
                 catch (System.UnauthorizedAccessException)
                 {

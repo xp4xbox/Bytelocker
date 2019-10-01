@@ -38,7 +38,7 @@ namespace Bytelocker.CryptoManager
             regKey.SetValue(valueName, value ? 1:0);
         }
 
-        public void DeleteBoolValue(String subKey, String valueName)
+        public void DeleteValue(String subKey, String valueName)
         {
             RegistryKey regKey = Registry.CurrentUser.CreateSubKey(SOFTWARE_NAME + @"\" + subKey);
             regKey.DeleteValue(valueName);

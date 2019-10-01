@@ -46,7 +46,7 @@ namespace Bytelocker.CryptoManager
                     this.fe.Decrypt();
                     try
                     {
-                        rm.DeleteBoolValue(RegistryManager.FILES_KEY_NAME, this.file_path.Substring(0, this.file_path.Length - FileEncrypter.FILE_EXTENSION_ENCRYPT.Length));
+                        rm.DeleteValue(RegistryManager.FILES_KEY_NAME, this.file_path.Substring(0, this.file_path.Length - FileEncrypter.FILE_EXTENSION_ENCRYPT.Length));
                     } catch (System.ArgumentException)
                     {
                         // if the value does not exist in registry
