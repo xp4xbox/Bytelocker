@@ -4,10 +4,15 @@ namespace Bytelocker.Installer
 {
     class Uninstall
     {
-        public static void decryptAll() 
+        public Uninstall()
         {
-            CryptoManagerMainHandler cm = new CryptoManagerMainHandler();
-            cm.DecryptAll();
+            this.deleteRegChanges();
+        }
+
+        private void deleteRegChanges()
+        {
+            RegistryManager rm = new RegistryManager();
+            rm.DeleteMainKey();
         }
     }
 }

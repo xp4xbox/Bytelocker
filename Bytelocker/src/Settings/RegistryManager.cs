@@ -33,6 +33,11 @@ namespace Bytelocker.CryptoManager
             Registry.CurrentUser.DeleteSubKey(SOFTWARE_NAME + @"\" + name);
         }
 
+        public void DeleteMainKey()
+        {
+            Registry.CurrentUser.DeleteSubKey(SOFTWARE_NAME);
+        }
+
         public void CreateBoolValue(String subKey, String valueName, bool value)
         {
             RegistryKey regKey = Registry.CurrentUser.CreateSubKey(SOFTWARE_NAME + @"\" + subKey);
@@ -55,6 +60,22 @@ namespace Bytelocker.CryptoManager
         {
             RegistryKey regKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
             regKey.SetValue(valuename, filepath);
+        }
+
+        public String ReadStringValue(String subKey, String valueName)
+        {
+            RegistryKey regKey = Registry.CurrentUser.OpenSubKey(SOFTWARE_NAME + @"\" + subKey);
+
+            try
+            {
+                return (regKey.GetValue(valueName).ToString());
+
+            }
+            catch (System.NullReferenceException)
+            {
+
+                return "none";
+            }
         }
 
         public bool ReadBoolValue(String subKey, String valueName)

