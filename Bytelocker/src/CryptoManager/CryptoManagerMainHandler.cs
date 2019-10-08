@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Bytelocker.Settings;
+using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace Bytelocker.CryptoManager
 {

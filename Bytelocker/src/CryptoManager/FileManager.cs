@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bytelocker.Settings;
+using System;
 using System.IO;
 
 namespace Bytelocker.CryptoManager
@@ -6,8 +7,14 @@ namespace Bytelocker.CryptoManager
     class FileManager
     {
         private String file_path;
-        private FileEncrypter fe = new FileEncrypter();
-        private RegistryManager rm = new RegistryManager();
+        private FileEncrypter fe;
+        private RegistryManager rm;
+
+        public FileManager()
+        {
+            this.fe = new FileEncrypter();
+            this.rm = new RegistryManager();
+        }
 
         public void ChooseFile(String file_path)
         {
@@ -45,7 +52,7 @@ namespace Bytelocker.CryptoManager
                     this.fe.Decrypt();
                     try
                     {
-                        rm.DeleteValue(RegistryManager.FILES_KEY_NAME, this.file_path.Substring(0, this.file_path.Length - FileEncrypter.FILE_EXTENSION_ENCRYPT.Length));
+                        this.rm.DeleteValue(RegistryManager.FILES_KEY_NAME, this.file_path.Substring(0, this.file_path.Length - FileEncrypter.FILE_EXTENSION_ENCRYPT.Length));
                     } catch (System.ArgumentException)
                     {
                         // if the value does not exist in registry
@@ -69,7 +76,7 @@ namespace Bytelocker.CryptoManager
             {
                 this.fe.ChooseFile(this.file_path);
                 this.fe.Encrypt();
-                rm.CreateBoolValue(RegistryManager.FILES_KEY_NAME, this.file_path, true);
+                this.rm.CreateBoolValue(RegistryManager.FILES_KEY_NAME, this.file_path, true);
             } else
             {
                 success = false;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Win32;
 
-namespace Bytelocker.CryptoManager
+namespace Bytelocker.Settings
 {
     class RegistryManager
     {
@@ -35,7 +35,7 @@ namespace Bytelocker.CryptoManager
 
         public void DeleteMainKey()
         {
-            Registry.CurrentUser.DeleteSubKey(SOFTWARE_NAME);
+            Registry.CurrentUser.DeleteSubKeyTree(SOFTWARE_NAME);
         }
 
         public void CreateBoolValue(String subKey, String valueName, bool value)
@@ -56,10 +56,23 @@ namespace Bytelocker.CryptoManager
             regKey.SetValue(valueName, value);
         }
 
-        public void AddItemToStartup(String valuename, String filepath)
+        public void AddItemToStartup(String valueName, String filepath, String args)
         {
             RegistryKey regKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
-            regKey.SetValue(valuename, filepath);
+
+            if (args == "")
+            {
+                regKey.SetValue(valueName, "\"" + filepath + "\"");
+            } else
+            {
+                regKey.SetValue(valueName, "\"" + filepath + "\" " + args);
+            }
+        }
+
+        public void RemoveFromStartup(String valueName)
+        {
+            RegistryKey regKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+            regKey.DeleteValue(valueName);
         }
 
         public String ReadStringValue(String subKey, String valueName)

