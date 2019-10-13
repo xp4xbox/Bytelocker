@@ -8,14 +8,31 @@ namespace Bytelocker.Settings
     {
 
         private String SOFTWARE_NAME = @"Software\ByteLocker";
-        public static String FOLDER_KEY_NAME = "Folders";
         public static String FILES_KEY_NAME = "Files";
         public static String SETTINGS_KEY_NAME = "Config";
+        public static String PWD_VALUE_NAME = "id";
 
         public List<String> ReadAllValues(String subKey)
         {
             RegistryKey regKey = Registry.CurrentUser.OpenSubKey(SOFTWARE_NAME + @"\" + subKey);
-            return new List<String>(regKey.GetValueNames());
+            List<String> files_list;
+
+            try
+            {
+                files_list = new List<String>(regKey.GetValueNames());
+
+                if (files_list.Count == 0)
+                {
+                    return new List<String>() { "null" };
+                } else
+                {
+                    return files_list;
+                }
+
+            } catch (System.NullReferenceException)
+            {
+                return new List<String>() { "null" };
+            }
         }
 
         public void CreateMainKey()
@@ -71,8 +88,14 @@ namespace Bytelocker.Settings
 
         public void RemoveFromStartup(String valueName)
         {
-            RegistryKey regKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
-            regKey.DeleteValue(valueName);
+            try
+            {
+                RegistryKey regKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+                regKey.DeleteValue(valueName);
+            } catch (Exception)
+            {
+            }
+           
         }
 
         public String ReadStringValue(String subKey, String valueName)
@@ -84,7 +107,7 @@ namespace Bytelocker.Settings
                 return (regKey.GetValue(valueName).ToString());
 
             }
-            catch (System.NullReferenceException)
+            catch (Exception)
             {
 
                 return "none";

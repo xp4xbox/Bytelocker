@@ -26,16 +26,27 @@ namespace Bytelocker.CryptoManager
             try
             {
                 File.Delete(this.file_path);
-            } catch (Exception ex)
+            } catch (Exception)
             {
             }
             
         }
 
+        public void RenameTmpFileToOrig()
+        {
+            try
+            {
+                File.Move(this.file_path + FileEncrypter.FILE_EXTENSION_ENCRYPT_TMP, this.file_path);
+            }
+            catch (Exception)
+            {
+            }
+
+        }
+
         public void SetupFileEncrypter()
         {
             this.fe.FetchPassword();
-            this.fe.PinPasswordToMemory();
             this.fe.GenerateRandomSalt();
         }
 
@@ -45,23 +56,20 @@ namespace Bytelocker.CryptoManager
             
             if (File.Exists(this.file_path))
             {
-                if (!(FileManager.IsFileLocked(this.file_path)) && (Path.GetExtension(this.file_path) == FileEncrypter.FILE_EXTENSION_ENCRYPT))
+                if (!(FileManager.IsFileLocked(this.file_path)) && rm.ReadStringValue(RegistryManager.FILES_KEY_NAME, this.file_path) != "none")
                 {
                     success = true;
                     this.fe.ChooseFile(this.file_path);
                     this.fe.Decrypt();
                     try
                     {
-                        this.rm.DeleteValue(RegistryManager.FILES_KEY_NAME, this.file_path.Substring(0, this.file_path.Length - FileEncrypter.FILE_EXTENSION_ENCRYPT.Length));
+                        this.rm.DeleteValue(RegistryManager.FILES_KEY_NAME, this.file_path);
                     } catch (System.ArgumentException)
                     {
                         // if the value does not exist in registry
                     }
-                    
                 }
             }
-
-            this.fe.ClearPasswordFromMemory();
 
             return success;
         }
@@ -72,7 +80,8 @@ namespace Bytelocker.CryptoManager
 
             String file_extension = Path.GetExtension(this.file_path);
 
-            if (!(IsFileLocked(this.file_path)) && file_extension != FileEncrypter.FILE_EXTENSION_ENCRYPT && FileEncrypter.FILE_EXTENSIONS_TO_ENCRYPT.Contains(file_extension.ToLower()))
+            if (!(IsFileLocked(this.file_path)) && rm.ReadStringValue(RegistryManager.FILES_KEY_NAME, this.file_path) == "none" 
+                && FileEncrypter.FILE_EXTENSIONS_TO_ENCRYPT.Contains(file_extension.ToLower()))
             {
                 this.fe.ChooseFile(this.file_path);
                 this.fe.Encrypt();
@@ -81,8 +90,6 @@ namespace Bytelocker.CryptoManager
             {
                 success = false;
             }
-
-            this.fe.ClearPasswordFromMemory();
 
             return success;
         }

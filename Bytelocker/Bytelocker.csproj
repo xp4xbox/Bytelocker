@@ -39,22 +39,17 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net" />
     <Reference Include="System.Security" />
-    <Reference Include="System.Security.AccessControl, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.AccessControl.4.6.0\lib\net461\System.Security.AccessControl.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Permissions, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Permissions.4.6.0\lib\net461\System.Security.Permissions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Principal.Windows, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Principal.Windows.4.6.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
-    </Reference>
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Windows.Forms" />
@@ -73,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\Bytelocker.cs" />
+    <Compile Include="src\CryptoPayment\PaymentManager.cs" />
     <Compile Include="src\Tools\B64Manager.cs" />
     <Compile Include="src\Tools\CommandManager.cs" />
     <Compile Include="src\CryptoManager\Aes.cs" />
@@ -80,7 +76,14 @@
     <Compile Include="src\CryptoManager\DirManager.cs" />
     <Compile Include="src\CryptoManager\FileEncrypter.cs" />
     <Compile Include="src\Detection\RandomFileNameGenerator.cs" />
+    <Compile Include="src\Tools\NetworkTest.cs" />
     <Compile Include="src\Tools\TimeManager.cs" />
+    <Compile Include="src\UI\EncryptedFilesList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\UI\EncryptedFilesList.Designer.cs">
+      <DependentUpon>EncryptedFilesList.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\UI\MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -111,17 +114,19 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="src\UI\EncryptedFilesList.resx">
+      <DependentUpon>EncryptedFilesList.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\UI\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="src\packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="src\CryptoPayment\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
