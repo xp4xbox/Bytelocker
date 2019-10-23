@@ -10,7 +10,7 @@ namespace Bytelocker.CryptoManager
         private String dir_path;
         public static List<String> FOLDERS_TO_EXCLUDE = new List<String>() { Environment.GetEnvironmentVariable("windir").ToLower(), Environment.GetEnvironmentVariable("ProgramData").ToLower(),
             Environment.GetEnvironmentVariable("APPDATA").ToLower(), Environment.GetEnvironmentVariable("LOCALAPPDATA").ToLower(), (Environment.GetEnvironmentVariable("SystemDrive") + @"\Program Files").ToLower(),
-            Environment.GetEnvironmentVariable("TEMP").ToLower(), Environment.GetEnvironmentVariable("TMP").ToLower(), (Environment.GetEnvironmentVariable("SystemDrive") + @"\Program Files (x86)").ToLower()};
+            Environment.GetEnvironmentVariable("TEMP").ToLower(), Environment.GetEnvironmentVariable("TMP").ToLower(), (Environment.GetEnvironmentVariable("SystemDrive") + @"\Program Files (x86)").ToLower(), "$recycle.bin"};
 
         public void ChooseDir(String dir_path)
         {

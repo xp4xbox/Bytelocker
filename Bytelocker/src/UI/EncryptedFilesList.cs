@@ -20,7 +20,6 @@ namespace Bytelocker.UI
         {
             InitializeComponent();
             rm = new RegistryManager();
-            this.Load += new System.EventHandler(this.EncryptedFilesList_Load);
         }
 
         private void EncryptedFilesList_Load(object sender, EventArgs e)

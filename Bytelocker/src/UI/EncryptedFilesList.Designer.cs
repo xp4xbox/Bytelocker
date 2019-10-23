@@ -35,6 +35,7 @@
             // 
             // lvFilesList
             // 
+            this.lvFilesList.AutoArrange = false;
             this.lvFilesList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chName,
             this.chLocation});
@@ -42,8 +43,7 @@
             this.lvFilesList.Location = new System.Drawing.Point(0, 0);
             this.lvFilesList.MultiSelect = false;
             this.lvFilesList.Name = "lvFilesList";
-            this.lvFilesList.Scrollable = false;
-            this.lvFilesList.Size = new System.Drawing.Size(548, 406);
+            this.lvFilesList.Size = new System.Drawing.Size(600, 377);
             this.lvFilesList.TabIndex = 0;
             this.lvFilesList.UseCompatibleStateImageBehavior = false;
             this.lvFilesList.View = System.Windows.Forms.View.Details;
@@ -51,7 +51,7 @@
             // chName
             // 
             this.chName.Text = "Name";
-            this.chName.Width = 180;
+            this.chName.Width = 281;
             // 
             // chLocation
             // 
@@ -62,14 +62,17 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(548, 406);
+            this.ClientSize = new System.Drawing.Size(600, 377);
             this.Controls.Add(this.lvFilesList);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(2);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "EncryptedFilesList";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "List of Encrypted Files";
+            this.Load += new System.EventHandler(this.EncryptedFilesList_Load);
             this.ResumeLayout(false);
 
         }

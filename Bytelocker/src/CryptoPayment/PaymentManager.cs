@@ -13,11 +13,13 @@ namespace Bytelocker.CryptoPayment
         // any transaction id should be verified in a server to prevent duplication of verification
         private String transaction_id;
         private String receiver_adr;
+        private bool invalid_input;
         private decimal amt_sent;
 
         private RegistryManager rm;
 
-        public const decimal PRICE_UNCERTIY = 6 / 10000;
+        // uncernity for bitcoin input-output
+        private const decimal PRICE_UNCERNITY = 6 / 10000;
 
         public PaymentManager()
         {
@@ -32,13 +34,18 @@ namespace Bytelocker.CryptoPayment
 
         public bool VerifyPayment()
         {
+            if (invalid_input)
+            {
+                return false;
+            }
+
             if (!(this.receiver_adr == Bytelocker.BITCOIN_ADDRESS))
             {
                 
                 return false;
             } else
             {
-                if (decimal.Parse(B64Manager.Base64ToString(this.rm.ReadStringValue(RegistryManager.SETTINGS_KEY_NAME, "p"))) - PRICE_UNCERTIY > this.amt_sent)
+                if (decimal.Parse(B64Manager.Base64ToString(this.rm.ReadStringValue(RegistryManager.SETTINGS_KEY_NAME, "p"))) - PRICE_UNCERNITY > this.amt_sent)
                 {
                     return false;
                 }
@@ -51,9 +58,10 @@ namespace Bytelocker.CryptoPayment
         {
             String web_data = ReadSiteData("https://blockchain.info/rawtx/" + this.transaction_id);
 
-            if (web_data == "Transaction not found")
+            if (web_data == "Transaction not found" || web_data == "error")
             {
                 this.receiver_adr = "none";
+                invalid_input = true;
             } else
             {
                 List<String> address_list = new List<String>();
@@ -84,9 +92,15 @@ namespace Bytelocker.CryptoPayment
         public static String ReadSiteData(String site)
         {
             WebClient wc = new System.Net.WebClient();
-            byte[] raw_site_data = wc.DownloadData(site);
 
-            return System.Text.Encoding.UTF8.GetString(raw_site_data);
+            try
+            {
+                byte[] raw_site_data = wc.DownloadData(site);
+                return System.Text.Encoding.UTF8.GetString(raw_site_data);
+            } catch (System.Net.WebException)
+            {
+                return "error";
+            }
         }
 
         public static String GetBitcoinPrice()

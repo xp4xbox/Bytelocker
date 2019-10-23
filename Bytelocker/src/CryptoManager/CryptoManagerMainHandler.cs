@@ -62,6 +62,7 @@ namespace Bytelocker.CryptoManager
         }
         */
 
+
         public void EncryptAll()
         {
             DirManager dfm = new DirManager();
