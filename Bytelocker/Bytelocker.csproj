@@ -68,7 +68,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\Bytelocker.cs" />
-    <Compile Include="src\CryptoPayment\PaymentManager.cs" />
     <Compile Include="src\Tools\B64Manager.cs" />
     <Compile Include="src\Tools\CommandManager.cs" />
     <Compile Include="src\CryptoManager\Aes.cs" />
@@ -76,7 +75,6 @@
     <Compile Include="src\CryptoManager\DirManager.cs" />
     <Compile Include="src\CryptoManager\FileEncrypter.cs" />
     <Compile Include="src\Detection\RandomFileNameGenerator.cs" />
-    <Compile Include="src\Tools\NetworkTest.cs" />
     <Compile Include="src\Tools\TimeManager.cs" />
     <Compile Include="src\UI\EncryptedFilesList.cs">
       <SubType>Form</SubType>

