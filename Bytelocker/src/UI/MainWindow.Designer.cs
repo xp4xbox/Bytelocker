@@ -38,7 +38,6 @@
             this.lbTimeLeft = new System.Windows.Forms.Label();
             this.tmTimeLeftRefresher = new System.Windows.Forms.Timer(this.components);
             this.tbPassInput = new System.Windows.Forms.TextBox();
-            this.BtnBack = new System.Windows.Forms.Button();
             this.BtnVerify = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pbShield)).BeginInit();
             this.SuspendLayout();
@@ -115,16 +114,6 @@
             this.tbPassInput.Size = new System.Drawing.Size(341, 20);
             this.tbPassInput.TabIndex = 7;
             // 
-            // BtnBack
-            // 
-            this.BtnBack.Location = new System.Drawing.Point(468, 381);
-            this.BtnBack.Name = "BtnBack";
-            this.BtnBack.Size = new System.Drawing.Size(120, 35);
-            this.BtnBack.TabIndex = 8;
-            this.BtnBack.Text = "<< Back";
-            this.BtnBack.UseVisualStyleBackColor = true;
-            this.BtnBack.Click += new System.EventHandler(this.BtnBack_Click);
-            // 
             // BtnVerify
             // 
             this.BtnVerify.Location = new System.Drawing.Point(631, 381);
@@ -141,7 +130,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(759, 421);
             this.Controls.Add(this.BtnVerify);
-            this.Controls.Add(this.BtnBack);
             this.Controls.Add(this.tbPassInput);
             this.Controls.Add(this.lbTimeLeft);
             this.Controls.Add(this.lbTitleTime);
@@ -171,7 +159,6 @@
         private System.Windows.Forms.Label lbTimeLeft;
         private System.Windows.Forms.Timer tmTimeLeftRefresher;
         private System.Windows.Forms.TextBox tbPassInput;
-        private System.Windows.Forms.Button BtnBack;
         private System.Windows.Forms.Button BtnVerify;
     }
 }

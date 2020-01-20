@@ -1,7 +1,4 @@
 ﻿using Bytelocker.CryptoManager;
-using Bytelocker.Installer;
-using Bytelocker.Settings;
-using Bytelocker.src.Tools;
 using Bytelocker.Tools;
 using System;
 using System.Windows.Forms;
@@ -10,9 +7,7 @@ namespace Bytelocker.UI
 {
     public partial class MainWindow : Form
     {
-        private CommandManager cm;
         private TimeManager tm;
-        private RegistryManager rm = new RegistryManager();
         private PasswordManager pm;
 
         private LinkLabel llAESInfo, llListOfInfectedFiles;
@@ -21,7 +16,6 @@ namespace Bytelocker.UI
         {
             InitializeComponent();
             MaximizeBox = false;
-            this.cm = new CommandManager();
             this.tm = new TimeManager();
             this.tm.ReadFromRegistry();
             llAESInfo = new LinkLabel();
@@ -50,7 +44,6 @@ namespace Bytelocker.UI
         {
             this.BtnVerify.Hide();
             this.tbPassInput.Hide();
-            this.BtnBack.Hide();
             this.rtfInfo.Clear();
             this.UpdateTime();
 
@@ -96,18 +89,12 @@ namespace Bytelocker.UI
 
             this.lbTitle.Hide();
             this.tbPassInput.Show();
-            this.BtnBack.Show();
             this.BtnVerify.Show();
 
             this.rtfInfo.AppendText("Enter password to unlock:");
             this.rtfInfo.Select(this.rtfInfo.GetFirstCharIndexFromLine(0), this.rtfInfo.Lines[0].Length);
             this.rtfInfo.SelectionBullet = true;
             this.rtfInfo.DeselectAll();
-        }
-
-        private void BtnBack_Click(object sender, EventArgs e)
-        {
-            this.MainWindowScreenOne();
         }
 
         private void BtnVerify_Click(object sender, EventArgs e)
