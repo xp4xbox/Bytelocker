@@ -1,6 +1,9 @@
 ﻿using Bytelocker.Settings;
+using Bytelocker.UI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Bytelocker.CryptoManager
 {
@@ -24,26 +27,41 @@ namespace Bytelocker.CryptoManager
 
         public void DecryptAll()
         {
+            bool hasDecryptedSuccess;
             FileManager fm = new FileManager();
+            List<String> files = rm.ReadAllValues(RegistryManager.FILES_KEY_NAME);
 
-            try
+            if (!(files[0] == "null"));
             {
-                List<String> files = rm.ReadAllValues(RegistryManager.FILES_KEY_NAME);
-
                 foreach (String file_path in files)
                 {
-                    fm.ChooseFile(file_path);
-                    fm.SetupFileEncrypter();
-                    if (fm.DecryptFile())
+                    do
                     {
-                        fm.DeleteFile();
-                        fm.RenameTmpFileToOrig();
-                    }
+                        MainWindow.current_decrypt_file = file_path;
+                        fm.ChooseFile(file_path);
+                        fm.SetupFileEncrypter();
+
+                        // stop progress bar update while decrypting
+                        hasDecryptedSuccess = fm.DecryptFile();
+
+                        if (hasDecryptedSuccess)
+                        {
+                            MainWindow.error_decrypt_file = false;
+                            fm.DeleteFile();
+                            fm.RenameTmpFileToOrig();
+                        }
+                        else
+                        {
+                            MainWindow.error_decrypt_file = true;
+                            while (!(MainWindow.error_decrypt_file_continue))
+                            {
+                                Thread.Sleep(500);
+                            }
+                            MainWindow.error_decrypt_file_continue = false;
+                        }
+                    } while (MainWindow.error_decrypt_file);
                 }
-            }
-            catch (Exception)
-            {
-            }
+            }  
         }
         /*
         public void EncryptAll()

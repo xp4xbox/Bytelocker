@@ -82,6 +82,7 @@
     <Compile Include="src\UI\EncryptedFilesList.Designer.cs">
       <DependentUpon>EncryptedFilesList.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\UI\FilePathTruncate.cs" />
     <Compile Include="src\UI\MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>

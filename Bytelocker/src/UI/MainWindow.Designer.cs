@@ -39,6 +39,9 @@
             this.tmTimeLeftRefresher = new System.Windows.Forms.Timer(this.components);
             this.tbPassInput = new System.Windows.Forms.TextBox();
             this.BtnVerify = new System.Windows.Forms.Button();
+            this.pbDecryptProgress = new System.Windows.Forms.ProgressBar();
+            this.lbCurrentFileDecrypt = new System.Windows.Forms.Label();
+            this.tmTimerDecrypt = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pbShield)).BeginInit();
             this.SuspendLayout();
             // 
@@ -124,11 +127,28 @@
             this.BtnVerify.UseVisualStyleBackColor = true;
             this.BtnVerify.Click += new System.EventHandler(this.BtnVerify_Click);
             // 
+            // pbDecryptProgress
+            // 
+            this.pbDecryptProgress.Location = new System.Drawing.Point(259, 229);
+            this.pbDecryptProgress.Name = "pbDecryptProgress";
+            this.pbDecryptProgress.Size = new System.Drawing.Size(467, 21);
+            this.pbDecryptProgress.TabIndex = 10;
+            // 
+            // lbCurrentFileDecrypt
+            // 
+            this.lbCurrentFileDecrypt.AutoSize = true;
+            this.lbCurrentFileDecrypt.Location = new System.Drawing.Point(256, 204);
+            this.lbCurrentFileDecrypt.Name = "lbCurrentFileDecrypt";
+            this.lbCurrentFileDecrypt.Size = new System.Drawing.Size(0, 13);
+            this.lbCurrentFileDecrypt.TabIndex = 11;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(759, 421);
+            this.Controls.Add(this.lbCurrentFileDecrypt);
+            this.Controls.Add(this.pbDecryptProgress);
             this.Controls.Add(this.BtnVerify);
             this.Controls.Add(this.tbPassInput);
             this.Controls.Add(this.lbTimeLeft);
@@ -160,5 +180,8 @@
         private System.Windows.Forms.Timer tmTimeLeftRefresher;
         private System.Windows.Forms.TextBox tbPassInput;
         private System.Windows.Forms.Button BtnVerify;
+        private System.Windows.Forms.ProgressBar pbDecryptProgress;
+        private System.Windows.Forms.Label lbCurrentFileDecrypt;
+        private System.Windows.Forms.Timer tmTimerDecrypt;
     }
 }

@@ -25,7 +25,6 @@ namespace Bytelocker.CryptoManager
             this.rm = new RegistryManager();
         }
 
-
         public void FetchPassword()
         {
             // tmp solution for password
