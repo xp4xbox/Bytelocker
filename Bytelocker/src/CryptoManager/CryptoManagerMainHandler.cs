@@ -1,9 +1,9 @@
 ﻿using Bytelocker.Settings;
+using Bytelocker.src.UI;
 using Bytelocker.UI;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
+using System.IO;
 
 namespace Bytelocker.CryptoManager
 {
@@ -17,52 +17,42 @@ namespace Bytelocker.CryptoManager
             this.rm.CreateMainKey();
         }
 
-        public void DecryptSingleFile(String file)
-        {
-            FileManager fm = new FileManager();
-            fm.ChooseFile(file);
-            fm.SetupFileEncrypter();
-            fm.DecryptFile();
-        }
 
         public void DecryptAll()
         {
-            bool hasDecryptedSuccess;
             FileManager fm = new FileManager();
             List<String> files = rm.ReadAllValues(RegistryManager.FILES_KEY_NAME);
 
-            if (!(files[0] == "null"));
+            if (!(files[0] == "null"))
             {
                 foreach (String file_path in files)
                 {
-                    do
+                    MainWindow.current_decrypt_file = file_path;
+
+                    fm.ChooseFile(file_path);
+                    fm.SetupFileEncrypter();
+
+                    for (;;)
                     {
-                        MainWindow.current_decrypt_file = file_path;
-                        fm.ChooseFile(file_path);
-                        fm.SetupFileEncrypter();
-
-                        // stop progress bar update while decrypting
-                        hasDecryptedSuccess = fm.DecryptFile();
-
-                        if (hasDecryptedSuccess)
+                        if (fm.DecryptFile())
                         {
-                            MainWindow.error_decrypt_file = false;
                             fm.DeleteFile();
                             fm.RenameTmpFileToOrig();
-                        }
-                        else
+                            break;
+
+                        } else
                         {
-                            MainWindow.error_decrypt_file = true;
-                            while (!(MainWindow.error_decrypt_file_continue))
+                            if (!ErrorDecryptMessageBox.showMessageBoxDecryptError(file_path))
                             {
-                                Thread.Sleep(500);
+                                fm.removeRegistryItem();
+                                break;
                             }
-                            MainWindow.error_decrypt_file_continue = false;
                         }
-                    } while (MainWindow.error_decrypt_file);
+                    } 
                 }
-            }  
+            }
         }
+        
         /*
         public void EncryptAll()
         {
@@ -79,8 +69,8 @@ namespace Bytelocker.CryptoManager
             }
         }
         */
-
-
+        
+        
         public void EncryptAll()
         {
             DirManager dfm = new DirManager();
@@ -91,7 +81,7 @@ namespace Bytelocker.CryptoManager
                 dfm.EncryptDir();
             }
         }
-
+        
         public List<String> FilesEncryptedList()
         {
             try

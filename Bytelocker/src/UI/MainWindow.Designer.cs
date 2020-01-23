@@ -142,6 +142,11 @@
             this.lbCurrentFileDecrypt.Size = new System.Drawing.Size(0, 13);
             this.lbCurrentFileDecrypt.TabIndex = 11;
             // 
+            // tmTimerDecrypt
+            // 
+            this.tmTimerDecrypt.Interval = 80;
+            this.tmTimerDecrypt.Tick += new System.EventHandler(this.tmTimerDecrypt_Tick);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);

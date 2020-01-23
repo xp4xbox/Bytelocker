@@ -82,6 +82,7 @@
     <Compile Include="src\UI\EncryptedFilesList.Designer.cs">
       <DependentUpon>EncryptedFilesList.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\UI\ErrorDecryptMessageBox.cs" />
     <Compile Include="src\UI\FilePathTruncate.cs" />
     <Compile Include="src\UI\MainWindow.cs">
       <SubType>Form</SubType>
@@ -119,8 +120,6 @@
     <EmbeddedResource Include="src\UI\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="packages.config" />
-    <None Include="src\packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

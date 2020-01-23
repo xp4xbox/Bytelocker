@@ -50,6 +50,18 @@ namespace Bytelocker.CryptoManager
             this.fe.GenerateRandomSalt();
         }
 
+        public void removeRegistryItem()
+        {
+            try
+            {
+                this.rm.DeleteValue(RegistryManager.FILES_KEY_NAME, this.file_path);
+            }
+            catch (System.ArgumentException)
+            {
+                // if the value does not exist in registry
+            }
+        }
+
         public bool DecryptFile()
         {
             bool success = false;
@@ -61,13 +73,7 @@ namespace Bytelocker.CryptoManager
                     success = true;
                     this.fe.ChooseFile(this.file_path);
                     this.fe.Decrypt();
-                    try
-                    {
-                        this.rm.DeleteValue(RegistryManager.FILES_KEY_NAME, this.file_path);
-                    } catch (System.ArgumentException)
-                    {
-                        // if the value does not exist in registry
-                    }
+                    this.removeRegistryItem();
                 }
             }
 
