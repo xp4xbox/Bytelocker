@@ -1,5 +1,4 @@
 ﻿using Bytelocker.Settings;
-using Bytelocker.src.Tools;
 using System;
 
 namespace Bytelocker.Tools

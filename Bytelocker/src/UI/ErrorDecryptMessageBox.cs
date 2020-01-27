@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Bytelocker.src.UI
+namespace Bytelocker.UI
 {
     class ErrorDecryptMessageBox
     {

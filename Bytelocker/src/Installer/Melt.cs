@@ -2,8 +2,6 @@
 using Bytelocker.Tools;
 using ByteLocker.Detection;
 using System;
-using System.IO;
-using System.Reflection;
 
 namespace Bytelocker.Persistence
 {

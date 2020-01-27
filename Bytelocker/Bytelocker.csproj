@@ -83,13 +83,13 @@
       <DependentUpon>EncryptedFilesList.cs</DependentUpon>
     </Compile>
     <Compile Include="src\UI\ErrorDecryptMessageBox.cs" />
-    <Compile Include="src\UI\FilePathTruncate.cs" />
     <Compile Include="src\UI\MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="src\UI\MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\UI\TruncateFilePath.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\CryptoManager\PasswordManager.cs" />

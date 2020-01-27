@@ -1,6 +1,5 @@
 ﻿using Bytelocker.CryptoManager;
 using Bytelocker.Settings;
-using Bytelocker.src.UI;
 using Bytelocker.Tools;
 using System;
 using System.Threading;
@@ -10,11 +9,11 @@ namespace Bytelocker.UI
 {
     public partial class MainWindow : Form
     {
-        private static int MAX_DECRYPT_FILE_NAME_LENGHT = 90;
-
         private TimeManager tm;
         private PasswordManager pm;
         private RegistryManager rm;
+
+        private const int MAX_FILE_SIZE_LENGHT_UI = 80;
 
         private int progress_bar_inc;
         private String current_decrypt_file_local = "null";
@@ -183,9 +182,9 @@ namespace Bytelocker.UI
                 {
                     this.current_decrypt_file_local = current_decrypt_file;
 
-                    if (current_decrypt_file.Length > MAX_DECRYPT_FILE_NAME_LENGHT)
+                    if (current_decrypt_file.Length > MAX_FILE_SIZE_LENGHT_UI)
                     {
-                        this.lbCurrentFileDecrypt.Text = FilePathTruncate.TruncatePath(current_decrypt_file, MAX_DECRYPT_FILE_NAME_LENGHT);
+                        this.lbCurrentFileDecrypt.Text = TruncateFilePath.ShrinkPath(current_decrypt_file, MAX_FILE_SIZE_LENGHT_UI);
                     } else
                     {
                         this.lbCurrentFileDecrypt.Text = current_decrypt_file;

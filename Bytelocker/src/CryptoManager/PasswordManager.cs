@@ -1,7 +1,6 @@
 ﻿using Bytelocker.Settings;
-using Bytelocker.src.Tools;
+using Bytelocker.Tools;
 using System;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Bytelocker.CryptoManager

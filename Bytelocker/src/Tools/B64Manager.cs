@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Bytelocker.src.Tools
+namespace Bytelocker.Tools
 {
     class B64Manager
     {
