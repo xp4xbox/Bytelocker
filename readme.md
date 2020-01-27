@@ -1,6 +1,6 @@
 # Bytelocker
 
-Open-source ransomware on windows used for educational purposes.
+This program is a basic Windows ransomeware similar to cryptolocker which uses AES-256 with a local password. This program was created and must be used for educational purposes only.
 
 ![](https://github.com/xp4xbox/Bytelocker/blob/master/img.png)
 
