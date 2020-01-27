@@ -2,6 +2,8 @@
 
 Open-source ransomware on windows used for educational purposes.
 
+![](https://github.com/xp4xbox/Bytelocker/blob/master/img.png)
+
 ### Instructions for making program encrypt a single folder
  * Open `src/Bytelocker.cs` in VS or any other editor/ide.
  * Enter folder to encrypt in the `Encrypt()` method or 
