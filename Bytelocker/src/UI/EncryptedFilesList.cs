@@ -1,4 +1,4 @@
-﻿using Bytelocker.Settings;
+using Bytelocker.Settings;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -27,21 +27,32 @@ namespace Bytelocker.UI
             ListViewItem lvi;
             ImageList icon_list = new ImageList();
 
-            // get all icons for each file
-            foreach (String path in rm.ReadAllValues(RegistryManager.FILES_KEY_NAME))
-            {
-                icon_list.Images.Add(Icon.ExtractAssociatedIcon(path));
-            }
+            List<String> files_list = rm.ReadAllValues(RegistryManager.FILES_KEY_NAME);
 
-            lvFilesList.SmallImageList = icon_list;
-            int i = 0;
-
-            foreach (String path in rm.ReadAllValues(RegistryManager.FILES_KEY_NAME))
+            if (!(files_list[0] == "null"))
             {
-                lvi = new ListViewItem(Path.GetFileName(path), i);
-                lvi.SubItems.Add(new FileInfo(path).DirectoryName);
-                lvFilesList.Items.Add(lvi);
-                i++;
+                foreach (String path in files_list)
+                {
+                    try
+                    {
+                        icon_list.Images.Add(Icon.ExtractAssociatedIcon(path));
+                    } catch (Exception)
+                    {
+                        // if the file icon is not accessible
+                    }
+                    
+                }
+
+                lvFilesList.SmallImageList = icon_list;
+                int i = 0;
+
+                foreach (String path in rm.ReadAllValues(RegistryManager.FILES_KEY_NAME))
+                {
+                    lvi = new ListViewItem(Path.GetFileName(path), i);
+                    lvi.SubItems.Add(new FileInfo(path).DirectoryName);
+                    lvFilesList.Items.Add(lvi);
+                    i++;
+                }
             }
         }
     }
