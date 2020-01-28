@@ -40,7 +40,7 @@ This program is a Windows ransomeware similar to cryptolocker which uses AES-256
 ### Vulnerabilities/Weaknesses
  * Password is stored locally in registry as base64.
  * Password can still be retreived through memory hacking.
- * Program is not very efficent when getting a list of files to encrypt.
+ * Program is not super efficent.
  * Melting function may trigger AV.
  * Many variables are stored locally in registry.
  
