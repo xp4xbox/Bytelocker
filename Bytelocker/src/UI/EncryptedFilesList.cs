@@ -1,4 +1,4 @@
-﻿using Bytelocker.Settings;
+using Bytelocker.Settings;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
