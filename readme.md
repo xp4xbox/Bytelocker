@@ -41,7 +41,6 @@ This program is a Windows ransomeware similar to cryptolocker which uses AES-256
  * Password is stored locally in registry as base64.
  * Password can still be retreived through memory hacking.
  * Program is not super efficent.
- * Melting function may trigger AV.
  * Many variables are stored locally in registry.
  
 
