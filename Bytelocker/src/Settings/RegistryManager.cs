@@ -4,34 +4,30 @@ using Microsoft.Win32;
 
 namespace Bytelocker.Settings
 {
-    class RegistryManager
+    internal class RegistryManager
     {
+        public static string FILES_KEY_NAME = "Files";
+        public static string SETTINGS_KEY_NAME = "Config";
+        public static string PWD_VALUE_NAME = "id";
 
-        private String SOFTWARE_NAME = @"Software\ByteLocker";
-        public static String FILES_KEY_NAME = "Files";
-        public static String SETTINGS_KEY_NAME = "Config";
-        public static String PWD_VALUE_NAME = "id";
+        private readonly string SOFTWARE_NAME = @"Software\ByteLocker";
 
-        public List<String> ReadAllValues(String subKey)
+        public List<string> ReadAllValues(string subKey)
         {
-            RegistryKey regKey = Registry.CurrentUser.OpenSubKey(SOFTWARE_NAME + @"\" + subKey);
-            List<String> files_list;
+            var regKey = Registry.CurrentUser.OpenSubKey(SOFTWARE_NAME + @"\" + subKey);
+            List<string> files_list;
 
             try
             {
-                files_list = new List<String>(regKey.GetValueNames());
+                files_list = new List<string>(regKey.GetValueNames());
 
                 if (files_list.Count == 0)
-                {
-                    return new List<String>() { "null" };
-                } else
-                {
-                    return files_list;
-                }
-
-            } catch (System.NullReferenceException)
+                    return new List<string> {"null"};
+                return files_list;
+            }
+            catch (NullReferenceException)
             {
-                return new List<String>() { "null" };
+                return new List<string> {"null"};
             }
         }
 
@@ -40,7 +36,7 @@ namespace Bytelocker.Settings
             Registry.CurrentUser.CreateSubKey(SOFTWARE_NAME);
         }
 
-        public void CreateSubKey(String name)
+        public void CreateSubKey(string name)
         {
             Registry.CurrentUser.CreateSubKey(SOFTWARE_NAME + @"\" + name);
         }
@@ -55,88 +51,84 @@ namespace Bytelocker.Settings
             Registry.CurrentUser.DeleteSubKeyTree(SOFTWARE_NAME);
         }
 
-        public void CreateBoolValue(String subKey, String valueName, bool value)
+        public void CreateBoolValue(string subKey, string valueName, bool value)
         {
-            RegistryKey regKey = Registry.CurrentUser.CreateSubKey(SOFTWARE_NAME + @"\" + subKey);
-            regKey.SetValue(valueName, value ? 1:0);
+            var regKey = Registry.CurrentUser.CreateSubKey(SOFTWARE_NAME + @"\" + subKey);
+            regKey.SetValue(valueName, value ? 1 : 0);
         }
 
-        public void DeleteValue(String subKey, String valueName)
+        public void DeleteValue(string subKey, string valueName)
         {
-            RegistryKey regKey = Registry.CurrentUser.CreateSubKey(SOFTWARE_NAME + @"\" + subKey);
+            var regKey = Registry.CurrentUser.CreateSubKey(SOFTWARE_NAME + @"\" + subKey);
             regKey.DeleteValue(valueName);
         }
 
-        public void CreateStringValue(String subKey, String valueName, String value)
+        public void CreateStringValue(string subKey, string valueName, string value)
         {
-            RegistryKey regKey = Registry.CurrentUser.CreateSubKey(SOFTWARE_NAME + @"\" + subKey);
+            var regKey = Registry.CurrentUser.CreateSubKey(SOFTWARE_NAME + @"\" + subKey);
             regKey.SetValue(valueName, value);
         }
 
-        public void AddItemToStartup(String valueName, String filepath, String args)
+        public void AddItemToStartup(string valueName, string filepath, string args)
         {
-            RegistryKey regKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+            var regKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
 
             if (args == "")
-            {
                 regKey.SetValue(valueName, "\"" + filepath + "\"");
-            } else
-            {
+            else
                 regKey.SetValue(valueName, "\"" + filepath + "\" " + args);
-            }
         }
 
-        public String getStartupPath(String valuename)
+        public string getStartupPath(string valuename)
         {
-            RegistryKey regKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+            var regKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
 
             try
             {
-                return (regKey.GetValue(valuename)).ToString();
-            } catch (Exception)
-            {
-                return "none";
-            }
-        }
-
-        public void RemoveFromStartup(String valueName)
-        {
-            try
-            {
-                RegistryKey regKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
-                regKey.DeleteValue(valueName);
-            } catch (Exception)
-            {
-            }
-           
-        }
-
-        public String ReadStringValue(String subKey, String valueName)
-        {
-            RegistryKey regKey = Registry.CurrentUser.OpenSubKey(SOFTWARE_NAME + @"\" + subKey);
-
-            try
-            {
-                return (regKey.GetValue(valueName).ToString());
-
+                return regKey.GetValue(valuename).ToString();
             }
             catch (Exception)
             {
-
                 return "none";
             }
         }
 
-        public bool ReadBoolValue(String subKey, String valueName)
+        public void RemoveFromStartup(string valueName)
         {
-            RegistryKey regKey = Registry.CurrentUser.OpenSubKey(SOFTWARE_NAME + @"\" + subKey);
+            try
+            {
+                var regKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+                regKey.DeleteValue(valueName);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public string ReadStringValue(string subKey, string valueName)
+        {
+            var regKey = Registry.CurrentUser.OpenSubKey(SOFTWARE_NAME + @"\" + subKey);
 
             try
             {
-                return ((int)(regKey.GetValue(valueName)) == 1 ? true : false);
+                return regKey.GetValue(valueName).ToString();
+            }
+            catch (Exception)
+            {
+                return "none";
+            }
+        }
 
-            } catch (System.NullReferenceException) {
+        public bool ReadBoolValue(string subKey, string valueName)
+        {
+            var regKey = Registry.CurrentUser.OpenSubKey(SOFTWARE_NAME + @"\" + subKey);
 
+            try
+            {
+                return (int) regKey.GetValue(valueName) == 1 ? true : false;
+            }
+            catch (NullReferenceException)
+            {
                 return false;
             }
         }

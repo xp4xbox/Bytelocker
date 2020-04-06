@@ -1,29 +1,28 @@
-﻿using Bytelocker.Settings;
-using Bytelocker.UI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Bytelocker.Settings;
+using Bytelocker.UI;
 
 namespace Bytelocker.CryptoManager
 {
-    class CryptoManagerMainHandler
+    internal class CryptoManagerMainHandler
     {
-        private RegistryManager rm;
+        private readonly RegistryManager rm;
 
         public CryptoManagerMainHandler()
         {
-            this.rm = new RegistryManager();
-            this.rm.CreateMainKey();
+            rm = new RegistryManager();
+            rm.CreateMainKey();
         }
 
         public void DecryptAll()
         {
-            FileManager fm = new FileManager();
-            List<String> files = rm.ReadAllValues(RegistryManager.FILES_KEY_NAME);
+            var fm = new FileManager();
+            var files = rm.ReadAllValues(RegistryManager.FILES_KEY_NAME);
 
             if (!(files[0] == "null"))
-            {
-                foreach (String file_path in files)
+                foreach (var file_path in files)
                 {
                     MainWindow.current_decrypt_file = file_path;
 
@@ -31,14 +30,13 @@ namespace Bytelocker.CryptoManager
                     fm.SetupFileEncrypter();
 
                     for (;;)
-                    {
                         if (fm.DecryptFile())
                         {
                             fm.DeleteFile();
                             fm.RenameTmpFileToOrig();
                             break;
-
-                        } else
+                        }
+                        else
                         {
                             if (!ErrorDecryptMessageBox.showMessageBoxDecryptError(file_path))
                             {
@@ -46,20 +44,18 @@ namespace Bytelocker.CryptoManager
                                 break;
                             }
                         }
-                    } 
                 }
-            }
         }
-        
+
 
         public void EncryptAll()
         {
-            DirManager dfm = new DirManager();
+            var dfm = new DirManager();
 
-            foreach (DriveInfo drive in DriveInfo.GetDrives())
+            foreach (var drive in DriveInfo.GetDrives())
             {
-                List<String> dirs = DirManager.GetFoldersRecursive(drive.ToString());
-                foreach (String subDir in dirs)
+                var dirs = DirManager.GetFoldersRecursive(drive.ToString());
+                foreach (var subDir in dirs)
                 {
                     //dfm.ChooseDir(subDir);
                     //dfm.EncryptDir();
@@ -68,28 +64,28 @@ namespace Bytelocker.CryptoManager
         }
 
 
-        public void EncryptFolder(String folder_path)
+        public void EncryptFolder(string folder_path)
         {
-            DirManager dfm = new DirManager();
-            List<String> dirs = DirManager.GetFoldersRecursive(folder_path);
-            foreach (String subDir in dirs)
+            var dfm = new DirManager();
+            var dirs = DirManager.GetFoldersRecursive(folder_path);
+            foreach (var subDir in dirs)
             {
                 dfm.ChooseDir(subDir);
                 dfm.EncryptDir();
             }
         }
-        
-        public List<String> FilesEncryptedList()
+
+        public List<string> FilesEncryptedList()
         {
             try
             {
-                return new List<String>(rm.ReadAllValues(RegistryManager.FILES_KEY_NAME));
-            } catch (Exception)
+                return new List<string>(rm.ReadAllValues(RegistryManager.FILES_KEY_NAME));
+            }
+            catch (Exception)
             {
                 // if the key does not exist return empty list
-                return new List<String>();
+                return new List<string>();
             }
-            
         }
     }
 }

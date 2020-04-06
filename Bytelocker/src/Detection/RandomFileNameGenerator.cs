@@ -2,9 +2,9 @@
 
 namespace ByteLocker.Detection
 {
-    class RandomFileNameGenerator
+    internal class RandomFileNameGenerator
     {
-        public static String GetRandomGUID()
+        public static string GetRandomGUID()
         {
             return string.Format(@"{0}.exe", "{" + Guid.NewGuid() + "}");
         }

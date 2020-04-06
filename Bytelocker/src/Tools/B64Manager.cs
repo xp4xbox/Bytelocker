@@ -1,17 +1,18 @@
 ﻿using System;
+using System.Text;
 
 namespace Bytelocker.Tools
 {
-    class B64Manager
+    internal class B64Manager
     {
-        public static String ToBase64(String text)
+        public static string ToBase64(string text)
         {
-            return System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(text));
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(text));
         }
 
-        public static String Base64ToString(String b64_text)
+        public static string Base64ToString(string b64_text)
         {
-            return System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String(b64_text));
+            return Encoding.UTF8.GetString(Convert.FromBase64String(b64_text));
         }
     }
 }

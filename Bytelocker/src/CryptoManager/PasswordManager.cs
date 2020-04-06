@@ -1,7 +1,7 @@
-﻿using Bytelocker.Settings;
-using Bytelocker.Tools;
-using System;
+﻿using System;
 using System.Text;
+using Bytelocker.Settings;
+using Bytelocker.Tools;
 
 namespace Bytelocker.CryptoManager
 {
@@ -10,62 +10,62 @@ namespace Bytelocker.CryptoManager
      * Using a custom server to generate and send/receive would be optimal.
      */
 
-    class PasswordManager
+    internal class PasswordManager
     {
-        protected String password;
+        protected string password;
 
         // password lenght must NOT be 4 as "none" used in RegistryManager
         public int PASSWORD_LENGHT = 30;
-        public String VALID_CHAR = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*?{}[]().,;:";
-        RegistryManager rm;
+        private readonly RegistryManager rm;
+        public string VALID_CHAR = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*?{}[]().,;:";
 
         public PasswordManager()
         {
-            this.rm = new RegistryManager();
+            rm = new RegistryManager();
         }
 
         public void FetchPassword()
         {
             // tmp solution for password
-            String pwd = this.rm.ReadStringValue("", RegistryManager.PWD_VALUE_NAME);
+            var pwd = rm.ReadStringValue("", RegistryManager.PWD_VALUE_NAME);
 
             if (pwd == "none")
             {
-                this.UploadPassword();
-                this.FetchPassword();
-            } else
+                UploadPassword();
+                FetchPassword();
+            }
+            else
             {
-                this.password = B64Manager.Base64ToString(pwd);
+                password = B64Manager.Base64ToString(pwd);
             }
         }
 
-        public String returnPassword()
+        public string returnPassword()
         {
-            return this.password;
+            return password;
         }
 
         private void UploadPassword()
         {
             // tmp solution for password
-            this.rm.CreateStringValue("", RegistryManager.PWD_VALUE_NAME, B64Manager.ToBase64(this.GenerateRandomPassword()));
+            rm.CreateStringValue("", RegistryManager.PWD_VALUE_NAME, B64Manager.ToBase64(GenerateRandomPassword()));
         }
 
-        private String GenerateRandomPassword()
+        private string GenerateRandomPassword()
         {
-            StringBuilder sb = new StringBuilder();
-            Random rand = new Random();
+            var sb = new StringBuilder();
+            var rand = new Random();
             char randChar;
 
             while (0 < PASSWORD_LENGHT--)
             {
                 randChar = VALID_CHAR[rand.Next(VALID_CHAR.Length)];
                 if (char.IsLetter(randChar))
-                {
                     // if char is letter, do rand bool to determine uppercase or lowercase
-                   randChar = (rand.Next(100) <= 20 ? true : false) ? char.ToUpper(randChar) : randChar;
-                }
+                    randChar = (rand.Next(100) <= 20 ? true : false) ? char.ToUpper(randChar) : randChar;
                 sb.Append(randChar);
             }
+
             return sb.ToString();
         }
     }
