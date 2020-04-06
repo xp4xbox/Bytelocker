@@ -86,6 +86,19 @@ namespace Bytelocker.Settings
             }
         }
 
+        public String getStartupPath(String valuename)
+        {
+            RegistryKey regKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+
+            try
+            {
+                return (regKey.GetValue(valuename)).ToString();
+            } catch (Exception)
+            {
+                return "none";
+            }
+        }
+
         public void RemoveFromStartup(String valueName)
         {
             try

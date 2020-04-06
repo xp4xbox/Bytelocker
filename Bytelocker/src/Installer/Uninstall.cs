@@ -1,16 +1,21 @@
-﻿using Bytelocker.Persistence;
-using Bytelocker.Settings;
-using Bytelocker.Tools;
+﻿using Bytelocker.Settings;
+using System;
+using System.Diagnostics;
 
 namespace Bytelocker.Installer
 {
     class Uninstall
     {
+        RegistryManager rm;
+
         public Uninstall()
         {
+            this.rm = new RegistryManager();
             this.DeleteRegChanges();
+            this.Delete();
             this.RemoveFromStartup();
-            this.CloseAndDeleteSelf();
+
+            System.Environment.Exit(0);
         }
 
         private void DeleteRegChanges()
@@ -19,17 +24,29 @@ namespace Bytelocker.Installer
             rm.DeleteMainKey();
         }
 
-        private void CloseAndDeleteSelf()
+        private void Delete()
         {
-            CommandManager cm = new CommandManager();
-            cm.RunCommand("timeout 3 & del /f /q \"" + System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName + "\"");
-            System.Environment.Exit(0);
+            ProcessStartInfo psi = new ProcessStartInfo();
+            String path = this.rm.getStartupPath(Persistence.REGISTRY_STARTUP_VALUE_NAME);
+
+            if (path == "none")
+            {
+                psi.Arguments = "/C timeout 3 & del /f /q \"" + System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName + "\"";
+            } else
+            {
+                psi.Arguments = "/C timeout 3 & del /f /q \"" + path + "\"";
+            }
+
+            psi.WindowStyle = ProcessWindowStyle.Hidden;
+            psi.CreateNoWindow = true;
+            psi.FileName = "cmd.exe";
+
+            Process.Start(psi);
         }
 
         private void RemoveFromStartup()
         {
-            RegistryManager rm = new RegistryManager();
-            rm.RemoveFromStartup(Melt.REGISTRY_STARTUP_VALUE_NAME);
+            this.rm.RemoveFromStartup(Persistence.REGISTRY_STARTUP_VALUE_NAME);
         }
     }
 }

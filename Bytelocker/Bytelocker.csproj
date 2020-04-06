@@ -69,7 +69,6 @@
   <ItemGroup>
     <Compile Include="src\Bytelocker.cs" />
     <Compile Include="src\Tools\B64Manager.cs" />
-    <Compile Include="src\Tools\CommandManager.cs" />
     <Compile Include="src\CryptoManager\Aes.cs" />
     <Compile Include="src\CryptoManager\CryptoManagerMainHandler.cs" />
     <Compile Include="src\CryptoManager\DirManager.cs" />
@@ -94,7 +93,7 @@
   <ItemGroup>
     <Compile Include="src\CryptoManager\PasswordManager.cs" />
     <Compile Include="src\CryptoManager\FileManager.cs" />
-    <Compile Include="src\Installer\Melt.cs" />
+    <Compile Include="src\Installer\Persistence.cs" />
     <Compile Include="src\Installer\Uninstall.cs" />
     <Compile Include="src\Settings\RegistryManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

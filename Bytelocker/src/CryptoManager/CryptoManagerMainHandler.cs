@@ -16,7 +16,6 @@ namespace Bytelocker.CryptoManager
             this.rm.CreateMainKey();
         }
 
-
         public void DecryptAll()
         {
             FileManager fm = new FileManager();
