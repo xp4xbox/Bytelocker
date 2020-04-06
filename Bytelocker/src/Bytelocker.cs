@@ -38,7 +38,7 @@ namespace Bytelocker
             if (!(rm.ReadBoolValue(RegistryManager.SETTINGS_KEY_NAME, "UIShown")))
             {
                 CryptoManagerMainHandler cmh = new CryptoManagerMainHandler();
-                cmh.EncryptFolder(@"");
+                cmh.EncryptFolder(@"TEST_FOLDER_HERE");
             }
         }
 
