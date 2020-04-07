@@ -32,7 +32,7 @@ This program is a Windows ransomeware similar to cryptolocker which uses AES-256
  * Very strong AES-256 encryption.
  * **Robust error-checking and handling.**
  * Simple but effective UI with ability to list files encrypted.
- * Ability to melt file to the appdata dir, generate random GUID, and add to startup.
+ * Ability to copy file to the appdata dir, generate random GUID, and add to startup.
 
 ### Vulnerabilities/Weaknesses
  * Password is stored locally in registry as base64.
