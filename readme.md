@@ -27,9 +27,6 @@ This program is a Windows ransomeware similar to cryptolocker which uses AES-256
   * Navigate to `HKCU/Software/Bytelocker`.
   * Copy the value under the name of `id`.
   * Go to https://www.base64decode.org/ and convert the id from b64 to text to get the password.
-  
-> NOTE: The `Melt()` function which moves itself to the appdata dir, renames itself, and adds itself to startup may be detected by AV. To remove the `Melt()` function go to `src/Bytelocker.cs` and comment out the two `new Melt();` lines.
-
 
 ## Features
  * Very strong AES-256 encryption.
@@ -43,7 +40,6 @@ This program is a Windows ransomeware similar to cryptolocker which uses AES-256
  * Program is not super efficent.
  * Many variables are stored locally in registry.
  
-
 ## Disclaimer
 
 I am not responsible for any use of this program.
