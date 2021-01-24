@@ -1,6 +1,6 @@
 # Bytelocker
 
-This program is a educational Windows ransomeware similar to cryptolocker which uses AES-256 with a local password. This program was created for educational purposes. There is **no built-in payment system**.
+This program is a educational Windows ransomeware similar to cryptolocker which uses AES-256 with a local password.
 
 ![](https://github.com/xp4xbox/Bytelocker/blob/master/img.png)
 
